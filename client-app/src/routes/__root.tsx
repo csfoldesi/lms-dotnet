@@ -1,5 +1,5 @@
 import { Outlet, createRootRoute } from "@tanstack/react-router";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
+//import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 
 export const Route = createRootRoute({
@@ -8,6 +8,13 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
+    <>
+      <Outlet />
+      <TanStackRouterDevtools />
+    </>
+  );
+
+  /*return (
     <>
       <div className="flex">
         <header>
@@ -22,5 +29,5 @@ function RootComponent() {
       <Outlet />
       <TanStackRouterDevtools />
     </>
-  );
+  );*/
 }

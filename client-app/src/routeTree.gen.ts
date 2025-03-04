@@ -11,10 +11,17 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as DashboardRouteImport } from './routes/_dashboard/route'
 import { Route as IndexImport } from './routes/index'
-import { Route as TeacherIndexImport } from './routes/teacher/index'
+import { Route as DashboardSearchImport } from './routes/_dashboard/search'
+import { Route as DashboardDashboardImport } from './routes/_dashboard/dashboard'
 
 // Create/Update Routes
+
+const DashboardRouteRoute = DashboardRouteImport.update({
+  id: '/_dashboard',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -22,10 +29,16 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const TeacherIndexRoute = TeacherIndexImport.update({
-  id: '/teacher/',
-  path: '/teacher/',
-  getParentRoute: () => rootRoute,
+const DashboardSearchRoute = DashboardSearchImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
+
+const DashboardDashboardRoute = DashboardDashboardImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => DashboardRouteRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -39,51 +52,90 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/teacher/': {
-      id: '/teacher/'
-      path: '/teacher'
-      fullPath: '/teacher'
-      preLoaderRoute: typeof TeacherIndexImport
+    '/_dashboard': {
+      id: '/_dashboard'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRoute
+    }
+    '/_dashboard/dashboard': {
+      id: '/_dashboard/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardDashboardImport
+      parentRoute: typeof DashboardRouteImport
+    }
+    '/_dashboard/search': {
+      id: '/_dashboard/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof DashboardSearchImport
+      parentRoute: typeof DashboardRouteImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface DashboardRouteRouteChildren {
+  DashboardDashboardRoute: typeof DashboardDashboardRoute
+  DashboardSearchRoute: typeof DashboardSearchRoute
+}
+
+const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
+  DashboardDashboardRoute: DashboardDashboardRoute,
+  DashboardSearchRoute: DashboardSearchRoute,
+}
+
+const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(
+  DashboardRouteRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/teacher': typeof TeacherIndexRoute
+  '': typeof DashboardRouteRouteWithChildren
+  '/dashboard': typeof DashboardDashboardRoute
+  '/search': typeof DashboardSearchRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/teacher': typeof TeacherIndexRoute
+  '': typeof DashboardRouteRouteWithChildren
+  '/dashboard': typeof DashboardDashboardRoute
+  '/search': typeof DashboardSearchRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/teacher/': typeof TeacherIndexRoute
+  '/_dashboard': typeof DashboardRouteRouteWithChildren
+  '/_dashboard/dashboard': typeof DashboardDashboardRoute
+  '/_dashboard/search': typeof DashboardSearchRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/teacher'
+  fullPaths: '/' | '' | '/dashboard' | '/search'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/teacher'
-  id: '__root__' | '/' | '/teacher/'
+  to: '/' | '' | '/dashboard' | '/search'
+  id:
+    | '__root__'
+    | '/'
+    | '/_dashboard'
+    | '/_dashboard/dashboard'
+    | '/_dashboard/search'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  TeacherIndexRoute: typeof TeacherIndexRoute
+  DashboardRouteRoute: typeof DashboardRouteRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  TeacherIndexRoute: TeacherIndexRoute,
+  DashboardRouteRoute: DashboardRouteRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -97,14 +149,26 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/teacher/"
+        "/_dashboard"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/teacher/": {
-      "filePath": "teacher/index.tsx"
+    "/_dashboard": {
+      "filePath": "_dashboard/route.tsx",
+      "children": [
+        "/_dashboard/dashboard",
+        "/_dashboard/search"
+      ]
+    },
+    "/_dashboard/dashboard": {
+      "filePath": "_dashboard/dashboard.tsx",
+      "parent": "/_dashboard"
+    },
+    "/_dashboard/search": {
+      "filePath": "_dashboard/search.tsx",
+      "parent": "/_dashboard"
     }
   }
 }
