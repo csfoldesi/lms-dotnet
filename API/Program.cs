@@ -1,3 +1,4 @@
+using Application;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 builder.Services.AddPersistenceServices(builder.Configuration);
+builder.Services.AddApplicationServices();
 
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())

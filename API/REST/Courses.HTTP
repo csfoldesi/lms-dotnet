@@ -1,0 +1,12 @@
+@API_HostAddress=http://localhost:5294/api/courses
+
+# Create COurse
+POST {{API_HostAddress}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "userId": "user_2tXC8dO5dNaarhBy0OYrCjIDRbF",
+  "title": "Course 1"
+}
+###
