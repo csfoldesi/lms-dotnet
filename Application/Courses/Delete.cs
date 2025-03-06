@@ -3,15 +3,15 @@ using Application.Common.Interfaces;
 using AutoMapper;
 using Domain;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Courses
 {
-    public class Create
+    public class Delete
     {
         public class Command : IRequest<Result<CourseDto>>
         {
-            public required string UserId { get; set; }
-            public required string Title { get; set; }
+            public Guid Id { get; set; }
         }
 
         public class Handler : IRequestHandler<Command, Result<CourseDto>>
@@ -30,14 +30,17 @@ namespace Application.Courses
                 CancellationToken cancellationToken
             )
             {
-                var course = new Course
-                {
-                    Id = Guid.NewGuid(),
-                    UserId = request.UserId,
-                    Title = request.Title,
-                };
+                var course = await _dataContext.Courses.SingleOrDefaultAsync(
+                    course => course.Id == request.Id,
+                    cancellationToken: cancellationToken
+                );
 
-                _dataContext.Courses.Add(course);
+                if (course == null)
+                {
+                    return Result<CourseDto>.NotFound();
+                }
+
+                _dataContext.Courses.Remove(course);
 
                 try
                 {
@@ -46,7 +49,7 @@ namespace Application.Courses
                 }
                 catch (Exception)
                 {
-                    return Result<CourseDto>.Failure("Unable to create the Course");
+                    return Result<CourseDto>.Failure("Unable to delete the Course");
                 }
             }
         }

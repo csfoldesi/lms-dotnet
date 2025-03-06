@@ -14,5 +14,12 @@ namespace API.Controllers
             );
             return HandleResult(result);
         }
+
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> Delete(Guid Id)
+        {
+            var result = await Mediator.Send(new Delete.Command { Id = Id });
+            return HandleResult(result);
+        }
     }
 }
