@@ -8,19 +8,21 @@ export const Route = createFileRoute("/teacher")({
 });
 
 function RouteComponent() {
-  const { userId } = useAuth();
-  if (!userId) return <Navigate to="/auth" />;
+  const { isLoaded, isSignedIn } = useAuth();
+  if (isLoaded && !isSignedIn) return <Navigate to="/auth" />;
 
   return (
     <div className="h-fll">
-      <div className="h-[80px] md:pl-56 fixed inset-y-0 w-full z-50 flex justify-end items-center pr-4">
-        <Link to="/">
-          <Button size="sm" variant="ghost" className="cursor-pointer mr-2">
-            <LogOut className="h-4 w-4 mr-2" />
-            Exit from teacher mode
-          </Button>
-        </Link>
-        <UserButton />
+      <div className="h-[80px] md:pl-56 fixed inset-y-0 w-full z-50">
+        <div className="flex justify-end items-center h-full pr-4 bg-background">
+          <Link to="/">
+            <Button size="sm" variant="ghost" className="cursor-pointer mr-2">
+              <LogOut className="h-4 w-4 mr-2" />
+              Exit from teacher mode
+            </Button>
+          </Link>
+          <UserButton />
+        </div>
       </div>
       <div className="hidden md:flex h-full w-56 flex-col fixed inset-y-0 z-50">Sidebar</div>
       <main className="md:pl-56 pt-[80px] h-full">

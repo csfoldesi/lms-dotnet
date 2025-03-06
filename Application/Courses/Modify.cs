@@ -17,7 +17,6 @@ namespace Application.Courses
             public string? Description { get; set; }
             public string? ImageUrl { get; set; }
             public float? Price { get; set; }
-            public bool? IsPublished { get; set; }
             public Guid? CategoryId { get; set; }
         }
 

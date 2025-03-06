@@ -40,7 +40,6 @@ namespace API.Controllers
                     Description = request.Description,
                     ImageUrl = request.ImageUrl,
                     Price = request.Price,
-                    IsPublished = request.IsPublished,
                     CategoryId = request.CategoryId,
                 }
             );
