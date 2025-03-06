@@ -1,5 +1,13 @@
 @API_HostAddress=http://localhost:5294/api/courses
 
+# Get Course
+GET {{API_HostAddress}}/731d69ad-bff0-4c53-9f4c-dd43037270ac
+Accept: application/json
+Content-Type: application/json
+
+###
+
+
 # Create Course
 POST {{API_HostAddress}}
 Accept: application/json

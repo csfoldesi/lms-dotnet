@@ -6,6 +6,13 @@ namespace API.Controllers
 {
     public class CoursesController : BaseApiController
     {
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> Get(Guid Id)
+        {
+            var result = await Mediator.Send(new Get.Query { Id = Id });
+            return HandleResult(result);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(CourseCreateRequest request)
         {
