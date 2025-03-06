@@ -18,3 +18,13 @@ Accept: application/json
 Content-Type: application/json
 
 ###
+
+# Modify Course
+PATCH {{API_HostAddress}}/731d69ad-bff0-4c53-9f4c-dd43037270ac
+Accept: application/json
+Content-Type: application/json
+
+{
+  "title": "Course 1 - modified"
+}
+###

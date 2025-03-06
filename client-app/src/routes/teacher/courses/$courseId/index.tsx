@@ -1,3 +1,4 @@
+import { useCourseId } from "@/hooks/use-course-id";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/teacher/courses/$courseId/")({
@@ -5,5 +6,7 @@ export const Route = createFileRoute("/teacher/courses/$courseId/")({
 });
 
 function RouteComponent() {
-  return <div>Course</div>;
+  const courseId = useCourseId();
+
+  return <div>Course: {courseId}</div>;
 }
