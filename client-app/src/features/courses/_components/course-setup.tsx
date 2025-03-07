@@ -11,10 +11,12 @@ import { CategoryForm } from "./forms/category-form";
 import { ChaptersForm } from "./forms/chapters-form";
 import { PriceForm } from "./forms/price-form";
 import { AttachmentForm } from "./forms/attachemnt-form";
+import { useGetCategories } from "../api/use-get-categories";
 
 export const CourseSetup = () => {
   const courseId = useCourseId();
   const { data: course } = useGetCourse(courseId);
+  const { data: categories } = useGetCategories();
 
   if (!course) return null;
 
@@ -30,12 +32,6 @@ export const CourseSetup = () => {
   const completedFields = requiredFields.filter(Boolean).length;
   const completionText = `(${completedFields}/${totalFields})`;
   const isComplete = requiredFields.every(Boolean);
-
-  const categories = [
-    { name: "Category 1", id: "1" },
-    { name: "Category 2", id: "2" },
-    { name: "Category 3", id: "3" },
-  ];
 
   return (
     <>
@@ -60,7 +56,7 @@ export const CourseSetup = () => {
             <CategoryForm
               initialData={course}
               courseId={course?.id}
-              options={categories.map((category) => ({ label: category.name, value: category.id }))}
+              options={categories?.map((category) => ({ label: category.name, value: category.id }))}
             />
           </div>
           <div className="space-y-6">

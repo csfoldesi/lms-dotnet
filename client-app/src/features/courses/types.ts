@@ -7,3 +7,8 @@ export type Course = {
   isPublished?: boolean;
   categoryId?: string;
 };
+
+export type Category = {
+  id: string;
+  name: string;
+};

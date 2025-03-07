@@ -9,19 +9,21 @@ import toast from "react-hot-toast";
 import { cn } from "@/lib/utils";
 import { Combobox } from "@/components/ui/combobox";
 import { Course } from "../../types";
+import { useUpdateCourse } from "../../api/use-update-course";
 
 interface CategoryFormProps {
   initialData: Course;
   courseId: string;
-  options: { label: string; value: string }[];
+  options?: { label: string; value: string }[];
 }
 
 const formSchema = z.object({
   categoryId: z.string().min(1, { message: "Category is required" }),
 });
 
-export const CategoryForm = ({ initialData, courseId, options }: CategoryFormProps) => {
+export const CategoryForm = ({ initialData, courseId, options = [] }: CategoryFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const { updateCourse } = useUpdateCourse();
 
   const toggleEdit = () => setIsEditing((current) => !current);
 
@@ -33,13 +35,14 @@ export const CategoryForm = ({ initialData, courseId, options }: CategoryFormPro
   const { isSubmitting, isValid } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    try {
-      //await axios.patch(`/api/courses/${courseId}`, values);
-      toast.success("Course updated");
-      toggleEdit();
-    } catch {
-      toast.error("Something went wrong");
-    }
+    updateCourse({ id: courseId, ...values })
+      .then(() => {
+        toast.success("Course updated");
+        toggleEdit();
+      })
+      .catch(() => {
+        toast.error("Something went wrong");
+      });
   };
 
   const selectedOption = options.find((option) => option.value === initialData.categoryId);
