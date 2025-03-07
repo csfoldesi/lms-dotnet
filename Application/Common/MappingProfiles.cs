@@ -1,4 +1,5 @@
-﻿using Application.Courses;
+﻿using Application.Categories;
+using Application.Courses;
 using Domain;
 
 namespace Application.Common;
@@ -19,5 +20,6 @@ public class MappingProfiles : AutoMapper.Profile
                         )
                 )
             );
+        CreateMap<Category, CategoryDto>();
     }
 }

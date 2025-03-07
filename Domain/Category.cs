@@ -1,9 +1,7 @@
-﻿namespace Domain
-{
-    public class Category
-    {
-        public Guid Id { get; set; }
+﻿namespace Domain;
 
-        public required String Name { get; set; }
-    }
+public class Category
+{
+    public Guid Id { get; set; }
+    public required String Name { get; set; }
 }

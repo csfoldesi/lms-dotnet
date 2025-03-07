@@ -1,6 +1,7 @@
 using API.Extensions;
 using Application;
 using Infrastructure.Persistence;
+using Infrastructure.Seeds;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,7 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     await services.GetRequiredService<DataContext>().Database.MigrateAsync();
+    await Categories.SeedAsync(services.GetRequiredService<DataContext>());
 }
 
 // Configure the HTTP request pipeline.

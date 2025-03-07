@@ -1,8 +1,7 @@
-﻿namespace API.Dto
+﻿namespace API.Dto;
+
+public class CourseCreateRequest
 {
-    public class CourseCreateRequest
-    {
-        public required string UserId { get; set; }
-        public required string Title { get; set; }
-    }
+    public required string UserId { get; set; }
+    public required string Title { get; set; }
 }
