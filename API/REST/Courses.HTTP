@@ -7,7 +7,6 @@ Content-Type: application/json
 
 ###
 
-
 # Create Course
 POST {{API_HostAddress}}
 Accept: application/json
@@ -18,6 +17,17 @@ Content-Type: application/json
   "title": "Course 1"
 }
 ###
+
+# Add new Chapter to a Course
+POST {{API_HostAddress}}/731d69ad-bff0-4c53-9f4c-dd43037270ac/chapters
+Accept: application/json
+Content-Type: application/json
+
+{
+  "title": "Chapter 2"
+}
+###
+
 
 
 # Delete Course

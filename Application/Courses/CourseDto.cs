@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using Application.Chapters;
+using Domain;
 
 namespace Application.Courses
 {
@@ -12,5 +13,7 @@ namespace Application.Courses
         public bool IsPublished { get; set; }
 
         public Guid? CategoryId { get; set; }
+
+        public List<ChapterDto> Chapters { get; set; } = [];
     }
 }

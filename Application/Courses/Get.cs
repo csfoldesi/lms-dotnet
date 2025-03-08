@@ -30,10 +30,12 @@ public class Get
             CancellationToken cancellationToken
         )
         {
-            var course = await _dataContext.Courses.SingleOrDefaultAsync(
-                course => course.Id == request.Id,
-                cancellationToken: cancellationToken
-            );
+            var course = await _dataContext
+                .Courses.Include(course => course.Chapters)
+                .SingleOrDefaultAsync(
+                    course => course.Id == request.Id,
+                    cancellationToken: cancellationToken
+                );
 
             if (course == null)
             {

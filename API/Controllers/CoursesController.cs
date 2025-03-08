@@ -22,6 +22,15 @@ public class CoursesController : BaseApiController
         return HandleResult(result);
     }
 
+    [HttpPost("{Id}/chapters/")]
+    public async Task<IActionResult> CreateChapter(Guid Id, [FromBody] ChapterCreateRequest request)
+    {
+        var result = await Mediator.Send(
+            new Application.Chapters.Create.Command { CourseId = Id, Title = request.Title }
+        );
+        return HandleResult(result);
+    }
+
     [HttpDelete("{Id}")]
     public async Task<IActionResult> Delete(Guid Id)
     {
