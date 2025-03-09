@@ -1,0 +1,8 @@
+@API_HostAddress=http://localhost:5294/api/chapters
+
+# Get a Chapter
+GET {{API_HostAddress}}/28b061da-9943-4721-81d0-e201a0c810a9
+Accept: application/json
+Content-Type: application/json
+
+###
