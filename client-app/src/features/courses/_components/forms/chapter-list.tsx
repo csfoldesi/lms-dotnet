@@ -3,13 +3,7 @@ import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea
 import { Grip, Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-
-type Chapter = {
-  id: string;
-  title: string;
-  position: number;
-  isPublished: boolean;
-};
+import { Chapter } from "../../chapters/types";
 
 interface ChapterListProps {
   onEdit: (id: string) => void;

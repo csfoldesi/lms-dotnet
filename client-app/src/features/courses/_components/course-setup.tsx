@@ -65,7 +65,7 @@ export const CourseSetup = () => {
                 <IconBadge icon={ListChecks} />
                 <h2 className="text-xl">Course chapters</h2>
               </div>
-              <ChaptersForm courseId={course.id} />
+              <ChaptersForm courseId={course.id} initialData={course} />
             </div>
             <div>
               <div className="flex items-center gap-x-2">

@@ -1,3 +1,5 @@
+import { Chapter } from "./chapters/types";
+
 export type Course = {
   id: string;
   title: string;
@@ -6,6 +8,7 @@ export type Course = {
   price?: number;
   isPublished?: boolean;
   categoryId?: string;
+  chapters: Chapter[];
 };
 
 export type Category = {
