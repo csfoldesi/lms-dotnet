@@ -1,7 +1,7 @@
 @API_HostAddress=http://localhost:5294/api/courses
 
 # Get Course
-GET {{API_HostAddress}}/731d69ad-bff0-4c53-9f4c-dd43037270ac
+GET {{API_HostAddress}}/a71bd3ae-11d7-43dd-ac2d-0043433774db
 Accept: application/json
 Content-Type: application/json
 
@@ -27,6 +27,21 @@ Content-Type: application/json
   "title": "Chapter 2"
 }
 ###
+
+# Reorder Chapters
+PUT {{API_HostAddress}}/a71bd3ae-11d7-43dd-ac2d-0043433774db/chapters
+Accept: application/json
+Content-Type: application/json
+
+{
+  "chapterIdList": [
+    "7ec6656f-88c9-4f4e-a7fd-112eb2747a3e",
+    "28b061da-9943-4721-81d0-e201a0c810a9",
+    "56596ab7-3190-40a6-8ddc-e0f95be9339e"
+  ]
+}
+###
+
 
 
 

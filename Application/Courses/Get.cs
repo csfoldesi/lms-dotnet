@@ -31,7 +31,7 @@ public class Get
         )
         {
             var course = await _dataContext
-                .Courses.Include(course => course.Chapters)
+                .Courses.Include(course => course.Chapters.OrderBy(chapter => chapter.Position))
                 .SingleOrDefaultAsync(
                     course => course.Id == request.Id,
                     cancellationToken: cancellationToken

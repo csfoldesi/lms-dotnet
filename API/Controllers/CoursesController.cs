@@ -31,6 +31,22 @@ public class CoursesController : BaseApiController
         return HandleResult(result);
     }
 
+    [HttpPut("{Id}/chapters/")]
+    public async Task<IActionResult> ReorderChapters(
+        Guid Id,
+        [FromBody] ChapterReorderRequest request
+    )
+    {
+        var result = await Mediator.Send(
+            new Application.Chapters.Reorder.Command
+            {
+                CourseID = Id,
+                ChapterIdList = request.ChapterIdList,
+            }
+        );
+        return HandleResult(result);
+    }
+
     [HttpDelete("{Id}")]
     public async Task<IActionResult> Delete(Guid Id)
     {
