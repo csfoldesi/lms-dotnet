@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Course } from "../../types";
 import { ChapterList } from "./chapter-list";
 import { useCreateChapter } from "../../chapters/api/use-create-chapter";
+import { useReorderChapters } from "../../chapters/api/use-reorder-chapters";
+import { useNavigate } from "@tanstack/react-router";
 
 interface ChaptersFormProps {
   initialData: Course;
@@ -23,8 +25,9 @@ const formSchema = z.object({
 
 export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
   const [isCreating, setIsCreating] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
   const { createChapter } = useCreateChapter();
+  const { reorderChapters, isPending } = useReorderChapters();
+  const navigate = useNavigate();
 
   const toggleCreating = () => setIsCreating((current) => !current);
 
@@ -46,27 +49,23 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
       });
   };
 
-  const onReorder = async (updatedData: { id: string; position: number }[]) => {
-    try {
-      setIsUpdating(true);
-      /*await axios.put(`/api/courses/${courseId}/chapters/reorder`, {
-        list: updatedData,
-      });*/
-      toast.success("Chapters reordered");
-    } catch {
-      toast.error("Something went wrong");
-    } finally {
-      setIsUpdating(false);
-    }
+  const onReorder = async (reorderedIds: string[]) => {
+    reorderChapters({ courseId, chapterIdList: reorderedIds })
+      .then(() => {
+        toast.success("Chapters reordered");
+      })
+      .catch(() => {
+        toast.error("Something went wrong");
+      });
   };
 
   const onEdit = (id: string) => {
-    //router.push(`/teacher/courses/${courseId}/chapters/${id}`);
+    navigate({ to: `/teacher/courses/${courseId}/chapters/${id}` });
   };
 
   return (
     <div className="relative mt-6 border bg-slate-100 rounded-md p-4">
-      {isUpdating && (
+      {isPending && (
         <div className="absolute h-full w-full bg-slate-500/20 top-0 right-0 rounded-m flex items-center justify-center">
           <Loader2 className="animate-spin h-6 w-6 text-sky-700" />
         </div>

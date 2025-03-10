@@ -2,7 +2,7 @@ export type Chapter = {
   id: string;
   title: string;
   position: number;
-  description?: number;
+  description?: string;
   videoUrl?: string;
   isPublished: boolean;
   isFree: boolean;

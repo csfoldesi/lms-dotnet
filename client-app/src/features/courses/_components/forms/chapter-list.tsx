@@ -7,7 +7,7 @@ import { Chapter } from "../../chapters/types";
 
 interface ChapterListProps {
   onEdit: (id: string) => void;
-  onReorder: (updatedData: { id: string; position: number }[]) => void;
+  onReorder: (reorderedIds: string[]) => void;
   items: Chapter[];
 }
 
@@ -30,7 +30,10 @@ export const ChapterList = ({ onEdit, onReorder, items }: ChapterListProps) => {
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
-    const startIndex = Math.min(result.source.index, result.destination.index);
+    const reorderedIds = items.reduce((acc, curr) => [...acc, curr.id], [] as string[]);
+    onReorder(reorderedIds);
+
+    /*const startIndex = Math.min(result.source.index, result.destination.index);
     const endIndex = Math.max(result.source.index, result.destination.index);
     const updatedChapters = items.slice(startIndex, endIndex + 1);
 
@@ -40,7 +43,7 @@ export const ChapterList = ({ onEdit, onReorder, items }: ChapterListProps) => {
       position: items.findIndex((item) => item.id === chapter.id),
     }));
 
-    onReorder(bulkUpdatedData);
+    onReorder(bulkUpdatedData);*/
   };
 
   if (!isMounted) {
