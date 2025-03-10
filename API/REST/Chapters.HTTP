@@ -6,3 +6,16 @@ Accept: application/json
 Content-Type: application/json
 
 ###
+
+# Modify Chapter
+PATCH {{API_HostAddress}}/28b061da-9943-4721-81d0-e201a0c810a9
+Accept: application/json
+Content-Type: application/json
+
+{
+  "title": "Chapter 1 new",
+  "description": "This is a modified chapter",
+  "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  "isFree": true
+}
+###
