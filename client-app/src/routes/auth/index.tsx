@@ -1,4 +1,4 @@
-import { useAuth } from "@clerk/clerk-react";
+import { SignInButton, useAuth } from "@clerk/clerk-react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 
@@ -16,5 +16,9 @@ function RouteComponent() {
     }
   }, [navigate, userId]);
 
-  return <div>Please Authenticate</div>;
+  return (
+    <div>
+      <SignInButton />
+    </div>
+  );
 }

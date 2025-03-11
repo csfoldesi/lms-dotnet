@@ -7,7 +7,7 @@ import { useState } from "react";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
-import { useUpdateChapter } from "../api/use-update-chapter";
+import { useUpdateChapter } from "../../api/use-update-chapter";
 
 interface ChapterTitleFormProps {
   initialData: { title: string };

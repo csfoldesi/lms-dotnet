@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { ImageIcon, Pencil, PlusCircle } from "lucide-react";
+import { ImageIcon, Loader2, Pencil, PlusCircle } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Course } from "../../types";
-//import { FileUpload } from "@/components/file-upload";
+import { Dropzone } from "@/components/dropzone";
+import { useUploadCourseImage } from "../../api/use-upload-course-image";
 
 interface ImageFormProps {
   initialData: Course;
@@ -12,21 +13,33 @@ interface ImageFormProps {
 
 export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const { uploadCourseImage, isPending } = useUploadCourseImage();
 
   const toggleEdit = () => setIsEditing((current) => !current);
 
-  const onSubmit = async (values: { imageUrl: string }) => {
-    try {
-      //await axios.patch(`/api/courses/${courseId}`, values);
-      toast.success("Course updated");
-      toggleEdit();
-    } catch {
-      toast.error("Something went wrong");
-    }
+  const onSubmit = async (files: FileList) => {
+    if (files.length === 0) return;
+
+    const formData = new FormData();
+    formData.append("file", files[0]);
+
+    uploadCourseImage({ id: courseId, formData })
+      .then(() => {
+        toast.success("Course updated");
+        toggleEdit();
+      })
+      .catch(() => {
+        toast.error("Something went wrong");
+      });
   };
 
   return (
-    <div className="mt-6 border bg-slate-100 rounded-md p-4">
+    <div className="relative mt-6 border bg-slate-100 rounded-md p-4">
+      {isPending && (
+        <div className="absolute h-full w-full bg-background/50 top-0 right-0 rounded-m flex items-center justify-center">
+          <Loader2 className="animate-spin h-6 w-6 " />
+        </div>
+      )}
       <div className="font-medium flex items-center justify-between">
         Course image
         <Button variant="outline" onClick={toggleEdit} className="cursor-pointer">
@@ -57,7 +70,7 @@ export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
         ))}
       {isEditing && (
         <div>
-          FileUpload component
+          <Dropzone onSubmit={onSubmit} />
           <div className="text-xs text-muted-foreground mt-4">16:9 aspect ratio recommended</div>
         </div>
       )}

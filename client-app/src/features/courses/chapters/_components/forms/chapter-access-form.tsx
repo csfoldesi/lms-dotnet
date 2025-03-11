@@ -7,22 +7,22 @@ import { useState } from "react";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import toast from "react-hot-toast";
 import { cn } from "@/lib/utils";
-import { Editor } from "@/components/editor";
-import { Chapter } from "../types";
-import { Preview } from "@/components/preview";
-import { useUpdateChapter } from "../api/use-update-chapter";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Chapter } from "../../types";
+import { useUpdateChapter } from "../../api/use-update-chapter";
 
-interface ChapterDescriptionFormProps {
+interface ChapterAccessFormProps {
   initialData: Chapter;
   courseId: string;
   chapterId: string;
 }
 
 const formSchema = z.object({
-  description: z.string().min(1, { message: "Description is required" }),
+  isFree: z.boolean().default(false),
 });
 
-export const ChapterDescriptionForm = ({ initialData, courseId, chapterId }: ChapterDescriptionFormProps) => {
+export const ChapterAccessForm = ({ initialData, courseId, chapterId }: ChapterAccessFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const { updateChapter } = useUpdateChapter();
 
@@ -30,7 +30,7 @@ export const ChapterDescriptionForm = ({ initialData, courseId, chapterId }: Cha
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { description: initialData?.description || "" },
+    defaultValues: { isFree: Boolean(initialData.isFree) },
   });
 
   const { isSubmitting, isValid } = form.formState;
@@ -50,27 +50,21 @@ export const ChapterDescriptionForm = ({ initialData, courseId, chapterId }: Cha
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        Chapter description
+        Chapter access
         <Button variant="outline" onClick={toggleEdit}>
           {isEditing ? (
             <>Cancel</>
           ) : (
             <>
               <Pencil className="h-4 w-4 mr-2" />
-              Edit description
+              Edit access
             </>
           )}
         </Button>
       </div>
       {!isEditing && (
-        <div
-          className={cn(
-            "mt-2",
-            initialData.description && "font-semibold",
-            !initialData.description && "text-slate-500 italic"
-          )}>
-          {!initialData.description && "No description"}
-          {initialData.description && <Preview value={initialData.description} />}
+        <div className={cn("font-semibold mt-2", !initialData.isFree && "text-slate-500 italic")}>
+          {initialData.isFree ? "This chapter is free for preview" : "This chapter is not free"}
         </div>
       )}
       {isEditing && (
@@ -78,12 +72,15 @@ export const ChapterDescriptionForm = ({ initialData, courseId, chapterId }: Cha
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
             <FormField
               control={form.control}
-              name="description"
+              name="isFree"
               render={({ field }) => (
                 <FormItem>
                   <FormControl className="bg-white">
-                    <Editor {...field} />
+                    <Switch checked={field.value} onCheckedChange={field.onChange} id="isFree" />
                   </FormControl>
+                  <Label htmlFor="isFree" className="ml-2 text-slate-500">
+                    Check if you want to make this chapter free for preview
+                  </Label>
                   <FormMessage />
                 </FormItem>
               )}

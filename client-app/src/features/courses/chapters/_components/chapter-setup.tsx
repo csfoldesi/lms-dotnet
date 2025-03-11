@@ -6,9 +6,9 @@ import { useChapterId } from "@/hooks/use-chapter-id";
 import { useGetChapter } from "../api/use-get-chapter";
 import { Link } from "@tanstack/react-router";
 import { ChapterActions } from "./chapter-actions";
-import { ChapterTitleForm } from "./chapter-title-form";
-import { ChapterDescriptionForm } from "./chapter-description-form";
-import { ChapterAccessForm } from "./chapter-access-form";
+import { ChapterTitleForm } from "./forms/chapter-title-form";
+import { ChapterDescriptionForm } from "./forms/chapter-description-form";
+import { ChapterAccessForm } from "./forms/chapter-access-form";
 
 export const ChapterSetup = () => {
   const courseId = useCourseId();
