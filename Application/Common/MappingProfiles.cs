@@ -27,6 +27,8 @@ public class MappingProfiles : AutoMapper.Profile
 
         CreateMap<Chapter, ChapterDto>();
 
+        CreateMap<Attachment, AttachmentDto>();
+
         CreateMap<Chapters.Modify.Command, Chapter>()
             .ForAllMembers(opts =>
                 opts.Condition(

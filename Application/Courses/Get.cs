@@ -32,6 +32,7 @@ public class Get
         {
             var course = await _dataContext
                 .Courses.Include(course => course.Chapters.OrderBy(chapter => chapter.Position))
+                .Include(course => course.Attachments.OrderBy(a => a.Name))
                 .SingleOrDefaultAsync(
                     course => course.Id == request.Id,
                     cancellationToken: cancellationToken
@@ -42,7 +43,7 @@ public class Get
                 return Result<CourseDto>.NotFound();
             }
 
-            return Result<CourseDto>.Success(_mapper.Map<Course, CourseDto>(course));
+            return Result<CourseDto>.Success(_mapper.Map<CourseDto>(course));
         }
     }
 }

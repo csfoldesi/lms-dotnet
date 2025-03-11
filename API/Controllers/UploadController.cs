@@ -20,4 +20,21 @@ public class UploadController : BaseApiController
         );
         return HandleResult(result);
     }
+
+    [HttpPost("courses/{Id}/attachments")]
+    public async Task<IActionResult> AddCourseAttachment(Guid Id, [FromForm] IFormFile file)
+    {
+        using var memoryStream = new MemoryStream();
+        await file.CopyToAsync(memoryStream);
+
+        var result = await Mediator.Send(
+            new Application.Courses.AddAttachment.Command
+            {
+                Id = Id,
+                FileName = file.FileName,
+                Content = memoryStream.ToArray(),
+            }
+        );
+        return HandleResult(result);
+    }
 }

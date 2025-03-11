@@ -7,5 +7,7 @@
 
         public Guid CourseId { get; set; }
         public required Course Course { get; set; }
+
+        public string? PublicId { get; set; }
     }
 }

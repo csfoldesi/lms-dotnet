@@ -15,5 +15,7 @@ namespace Application.Courses
         public Guid? CategoryId { get; set; }
 
         public List<ChapterDto> Chapters { get; set; } = [];
+
+        public List<AttachmentDto> Attachments { get; set; } = [];
     }
 }
