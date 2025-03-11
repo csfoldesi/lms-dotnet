@@ -11,7 +11,12 @@ public class UploadController : BaseApiController
         await file.CopyToAsync(memoryStream);
 
         var result = await Mediator.Send(
-            new Application.Courses.AddImage.Command { Id = Id, Content = memoryStream.ToArray() }
+            new Application.Courses.AddImage.Command
+            {
+                Id = Id,
+                FileName = file.FileName,
+                Content = memoryStream.ToArray(),
+            }
         );
         return HandleResult(result);
     }

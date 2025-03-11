@@ -17,5 +17,6 @@
         public ICollection<Attachment> Attachments { get; set; } = [];
 
         public ICollection<Purchase> Purchases { get; set; } = [];
+        public string? ImagePublicId { get; set; }
     }
 }

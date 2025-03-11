@@ -17,14 +17,14 @@ public class AzureStorageService : IStorageService
         //_containerClient.CreateIfNotExists();
     }
 
-    public async Task<StorageItemDto?> AddImageAsync(string fileName, byte[] content)
+    public async Task<StorageItemDto?> AddAsync(string fileName, byte[] content)
     {
         var client = _containerClient.GetBlobClient(fileName);
         await client.UploadAsync(new BinaryData(content), true);
         return new StorageItemDto { Name = client.Name, URI = client.Uri.ToString() };
     }
 
-    public async Task<string?> Delete(string publicId)
+    public async Task<string?> DeleteAsync(string publicId)
     {
         var client = _containerClient.GetBlobClient(publicId);
         bool exists = await client.ExistsAsync();

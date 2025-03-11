@@ -2,6 +2,6 @@
 
 public interface IStorageService
 {
-    Task<StorageItemDto?> AddImageAsync(string fileName, byte[] content);
-    Task<string?> Delete(string publicId);
+    Task<StorageItemDto?> AddAsync(string fileName, byte[] content);
+    Task<string?> DeleteAsync(string publicId);
 }

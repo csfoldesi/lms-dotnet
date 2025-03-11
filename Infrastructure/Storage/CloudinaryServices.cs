@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.IO;
-using Application.Common;
+﻿using Application.Common;
 using Application.Common.Interfaces;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
@@ -25,10 +23,10 @@ public class CloudinaryServices : IStorageService
         _assetFolder = config.Value.AssetFolder;
     }
 
-    public async Task<StorageItemDto?> AddImageAsync(string fileName, byte[] content)
+    public async Task<StorageItemDto?> AddAsync(string fileName, byte[] content)
     {
         using var memoryStream = new MemoryStream(content);
-        var uploadParams = new ImageUploadParams
+        var uploadParams = new RawUploadParams
         {
             File = new FileDescription(fileName, memoryStream),
             Folder = _assetFolder,
@@ -41,13 +39,16 @@ public class CloudinaryServices : IStorageService
         }
         return new StorageItemDto
         {
+            Name = fileName,
             PublicId = uploaResult.PublicId,
             URI = uploaResult.SecureUrl.ToString(),
         };
     }
 
-    public Task<string?> Delete(string publicId)
+    public async Task<string?> DeleteAsync(string publicId)
     {
-        throw new NotImplementedException();
+        var deleteParams = new DeletionParams(publicId) { ResourceType = ResourceType.Raw };
+        var result = await _cloudinary.DestroyAsync(deleteParams);
+        return result.Result == "ok" ? result.Result : null;
     }
 }

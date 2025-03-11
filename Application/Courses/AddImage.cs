@@ -12,6 +12,7 @@ public class AddImage
     public class Command : IRequest<Result<CourseDto>>
     {
         public required Guid Id { get; set; }
+        public required string FileName { get; set; }
         public required byte[] Content { get; set; }
     }
 
@@ -42,19 +43,19 @@ public class AddImage
                 return Result<CourseDto>.NotFound();
             }
 
-            var uploadResult = await _storageService.AddImageAsync(
-                "course_" + request.Id.ToString(),
-                request.Content
-            );
+            var uploadResult = await _storageService.AddAsync(request.FileName, request.Content);
             if (uploadResult == null)
             {
                 return Result<CourseDto>.Failure("Error during uploading image");
             }
 
-            // TODO: Delete old image from Storage
+            if (!string.IsNullOrEmpty(course.ImagePublicId))
+            {
+                await _storageService.DeleteAsync(course.ImagePublicId);
+            }
 
             course.ImageUrl = uploadResult.URI;
-            // TODO: Save uploadResult.publicId
+            course.ImagePublicId = uploadResult.PublicId;
 
             try
             {
