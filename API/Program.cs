@@ -2,6 +2,7 @@ using API.Extensions;
 using Application;
 using Infrastructure.Persistence;
 using Infrastructure.Seeds;
+using Infrastructure.Storage;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAPIServices(builder.Configuration);
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddApplicationServices();
+builder.Services.AddStorageServices(builder.Configuration);
 
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
