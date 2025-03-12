@@ -1,18 +1,13 @@
 import { Button } from "@/components/ui/button";
-import { File, FileUp, Loader2, PlusCircle, X } from "lucide-react";
+import { File, Loader2, PlusCircle, X } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Course } from "../../types";
-//import { FileUpload } from "@/components/file-upload";
-
-type Attachment = {
-  id: string;
-  url: string;
-  name: string;
-};
+import { Dropzone } from "@/components/dropzone";
+import { useUploadAttachment } from "../../api/use-upload-attachment";
 
 interface AttachmentFormProps {
-  initialData?: Course & { attachments: Attachment[] };
+  initialData: Course;
   courseId: string;
 }
 
@@ -24,17 +19,24 @@ interface AttachmentFormProps {
 export const AttachmentForm = ({ initialData, courseId }: AttachmentFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const { uploadAttachment, isPending } = useUploadAttachment();
 
   const toggleEdit = () => setIsEditing((current) => !current);
 
-  const onSubmit = async (values: { url: string; name: string }) => {
-    try {
-      //await axios.post(`/api/courses/${courseId}/attachments`, values);
-      toast.success("Course updated");
-      toggleEdit();
-    } catch {
-      toast.error("Something went wrong");
-    }
+  const onSubmit = async (files: FileList) => {
+    if (files.length === 0) return;
+
+    const formData = new FormData();
+    formData.append("file", files[0]);
+
+    uploadAttachment({ id: courseId, formData })
+      .then(() => {
+        toast.success("Course updated");
+        toggleEdit();
+      })
+      .catch(() => {
+        toast.error("Something went wrong");
+      });
   };
 
   const onDelete = async (id: string) => {
@@ -50,8 +52,13 @@ export const AttachmentForm = ({ initialData, courseId }: AttachmentFormProps) =
   };
 
   return (
-    <div className="mt-6 border bg-slate-100 rounded-md p-4">
-      <div className="font-medium flex items-center justify-between">
+    <div className="relative mt-6 border bg-slate-100 rounded-md p-4">
+      {isPending && (
+        <div className="absolute h-full w-full bg-background/50 top-0 right-0 rounded-m flex items-center justify-center">
+          <Loader2 className="animate-spin h-6 w-6 " />
+        </div>
+      )}
+      <div className="font-medium flex items-center justify-between mb-2">
         Course attachments
         <Button variant="outline" onClick={toggleEdit} className="cursor-pointer">
           {isEditing && <>Cancel</>}
@@ -65,12 +72,12 @@ export const AttachmentForm = ({ initialData, courseId }: AttachmentFormProps) =
       </div>
       {!isEditing && (
         <>
-          {initialData?.attachments.length === 0 && (
+          {initialData.attachments.length === 0 && (
             <p className="text-sm mt-2 text-slate-500 italic">No attachemnt set</p>
           )}
-          {initialData?.attachments.length > 0 && (
+          {initialData.attachments.length > 0 && (
             <div className="space-y-2">
-              {initialData?.attachments.map((attachment) => (
+              {initialData.attachments.map((attachment) => (
                 <div
                   key={attachment.id}
                   className="flex items-center p-3 bg-sky-100 border-sky-200 border text-sky-700 rounded-md">
@@ -94,7 +101,7 @@ export const AttachmentForm = ({ initialData, courseId }: AttachmentFormProps) =
       )}
       {isEditing && (
         <div>
-          FileUpload
+          <Dropzone onSubmit={onSubmit} />
           <div className="text-xs text-muted-foreground mt-4">
             Add anything your students might need to complete the course
           </div>

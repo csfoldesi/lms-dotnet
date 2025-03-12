@@ -26,7 +26,7 @@ export const CourseSetup = () => {
     course.imageUrl,
     course.price,
     course.categoryId,
-    //course.chapters.some((chapter) => chapter.isPublished),
+    course.chapters.some((chapter) => chapter.isPublished),
   ];
   const totalFields = requiredFields.length;
   const completedFields = requiredFields.filter(Boolean).length;
@@ -79,7 +79,7 @@ export const CourseSetup = () => {
                 <IconBadge icon={File} />
                 <h2 className="text-xl">Resources & Attachments</h2>
               </div>
-              <AttachmentForm courseId={course.id} />
+              <AttachmentForm initialData={course} courseId={course.id} />
             </div>
           </div>
         </div>

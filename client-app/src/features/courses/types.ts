@@ -9,9 +9,16 @@ export type Course = {
   isPublished?: boolean;
   categoryId?: string;
   chapters: Chapter[];
+  attachments: Attachment[];
 };
 
 export type Category = {
   id: string;
+  name: string;
+};
+
+export type Attachment = {
+  id: string;
+  url: string;
   name: string;
 };

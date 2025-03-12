@@ -57,16 +57,14 @@ export const Dropzone = ({ onSubmit }: DropzoneProps) => {
         onClick={openFileDialog}>
         <div className="flex flex-col items-center justify-center text-center">
           <Upload className="w-10 h-10 mb-3 text-muted-foreground" />
-          <h3 className="text-lg font-medium mb-1">
-            Drag & drop files or <span className="text-primary">browse</span>
-          </h3>
+          <h3 className="text-lg font-medium mb-1">Choose a file or drag and drop</h3>
           <p className="text-sm text-muted-foreground mb-3 hidden">Upload up to 5 files (max 10MB each)</p>
           <input
             ref={fileInputRef}
             type="file"
             className="hidden"
             onChange={(e) => handleFileChange(e.target.files)}
-            accept="image/*,.pdf,.doc,.docx,.xls,.xlsx"
+            accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx"
           />
           {selectedFilesCount > 0 ? (
             <Button
@@ -76,7 +74,7 @@ export const Dropzone = ({ onSubmit }: DropzoneProps) => {
                 e.stopPropagation();
                 handleSubmit();
               }}>
-              Upload {selectedFilesCount} Files
+              Upload {selectedFilesCount} {selectedFilesCount === 1 ? "file" : "files"}
             </Button>
           ) : (
             <Button
@@ -86,7 +84,7 @@ export const Dropzone = ({ onSubmit }: DropzoneProps) => {
                 e.stopPropagation();
                 openFileDialog();
               }}>
-              Select Files
+              Select file
             </Button>
           )}
         </div>
