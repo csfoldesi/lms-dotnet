@@ -6,15 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Chapters;
 
-public class Modify
+public class Publish
 {
     public class Command : IRequest<Result<ChapterDto>>
     {
         public required Guid Id { get; set; }
-        public string? Title { get; set; }
-        public string? Description { get; set; }
-        public string? VideoUrl { get; set; }
-        public bool? IsFree { get; set; }
     }
 
     public class Handler : IRequestHandler<Command, Result<ChapterDto>>
@@ -42,12 +38,16 @@ public class Modify
                 return Result<ChapterDto>.NotFound();
             }
 
-            _mapper.Map(request, chapter);
-            // TODO: this is a quick and dirty fix
-            if (request.IsFree.HasValue)
+            if (
+                string.IsNullOrEmpty(chapter.Title)
+                || string.IsNullOrEmpty(chapter.Description)
+                || string.IsNullOrEmpty(chapter.VideoUrl)
+            )
             {
-                chapter.IsFree = request.IsFree.Value;
+                return Result<ChapterDto>.Failure("Missing required fields");
             }
+
+            chapter.IsPublished = true;
 
             try
             {
@@ -56,7 +56,7 @@ public class Modify
             }
             catch (Exception)
             {
-                return Result<ChapterDto>.Failure("Unable to update the Chapter");
+                return Result<ChapterDto>.Failure("Unable to publish the Chapter");
             }
         }
     }

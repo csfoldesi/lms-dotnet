@@ -6,15 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Chapters;
 
-public class Modify
+public class Unpublish
 {
     public class Command : IRequest<Result<ChapterDto>>
     {
         public required Guid Id { get; set; }
-        public string? Title { get; set; }
-        public string? Description { get; set; }
-        public string? VideoUrl { get; set; }
-        public bool? IsFree { get; set; }
     }
 
     public class Handler : IRequestHandler<Command, Result<ChapterDto>>
@@ -33,20 +29,26 @@ public class Modify
             CancellationToken cancellationToken
         )
         {
-            var chapter = await _dataContext.Chapters.SingleOrDefaultAsync(
-                chapter => chapter.Id == request.Id,
-                cancellationToken: cancellationToken
-            );
+            var chapter = await _dataContext
+                .Chapters.Include(c => c.Course)
+                .SingleOrDefaultAsync(
+                    chapter => chapter.Id == request.Id,
+                    cancellationToken: cancellationToken
+                );
             if (chapter == null)
             {
                 return Result<ChapterDto>.NotFound();
             }
 
-            _mapper.Map(request, chapter);
-            // TODO: this is a quick and dirty fix
-            if (request.IsFree.HasValue)
+            chapter.IsPublished = false;
+
+            var remainingPublishedChaptersFound = await _dataContext.Chapters.AnyAsync(
+                c => c.CourseId == chapter.CourseId && c.Id != chapter.Id && c.IsPublished,
+                cancellationToken: cancellationToken
+            );
+            if (!remainingPublishedChaptersFound)
             {
-                chapter.IsFree = request.IsFree.Value;
+                chapter.Course.IsPublished = false;
             }
 
             try
@@ -56,7 +58,7 @@ public class Modify
             }
             catch (Exception)
             {
-                return Result<ChapterDto>.Failure("Unable to update the Chapter");
+                return Result<ChapterDto>.Failure("Unable to unpublish the Chapter");
             }
         }
     }
