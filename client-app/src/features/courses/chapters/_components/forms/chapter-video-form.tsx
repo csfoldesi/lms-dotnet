@@ -16,22 +16,11 @@ interface ChapterVideoFormProps {
   videoUrl: z.string().min(1),
 });*/
 
-export const ChapterVideoForm = ({ initialData, courseId, chapterid }: ChapterVideoFormProps) => {
+export const ChapterVideoForm = ({ initialData, chapterid }: ChapterVideoFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const { uploadVideo, isPending } = useUploadVideo();
 
   const toggleEdit = () => setIsEditing((current) => !current);
-
-  /*const onSubmit = async (values: { videoUrl: string }) => {
-    try {
-      await axios.patch(`/api/courses/${courseId}/chapters/${chapterid}`, values);
-      toast.success("Chapter updated");
-      toggleEdit();
-      router.refresh();
-    } catch {
-      toast.error("Something went wrong");
-    }
-  };*/
 
   const onSubmit = async (files: FileList) => {
     if (files.length === 0) return;

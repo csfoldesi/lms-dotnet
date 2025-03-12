@@ -2,8 +2,9 @@ import { ConfirmModal } from "@/components/confirm-modal";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "@tanstack/react-router";
 import { Trash } from "lucide-react";
-import { useState } from "react";
 import toast from "react-hot-toast";
+import { usePublishChapter } from "../api/use-publish-chapter";
+import { useUnpublishChapter } from "../api/use-unpublish-chapter";
 
 interface ChapterActionsProps {
   courseId: string;
@@ -14,7 +15,10 @@ interface ChapterActionsProps {
 
 export const ChapterActions = ({ courseId, chapterId, isPublished, disabled }: ChapterActionsProps) => {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+  const { publishChapter, isPending: isPublishing } = usePublishChapter();
+  const { unpublishChapter, isPending: isUnpublishing } = useUnpublishChapter();
+
+  const isLoading = isPublishing || isUnpublishing;
 
   const onDelete = async () => {
     /*setIsLoading(true);
@@ -31,22 +35,23 @@ export const ChapterActions = ({ courseId, chapterId, isPublished, disabled }: C
   };
 
   const onTogglePublish = async () => {
-    /*try {
-      setIsLoading(true);
-      if (isPublished) {
-        await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}/unpublish`);
-        toast.success("Chapter unpublished");
-        router.refresh();
-      } else {
-        await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}/publish`);
-        toast.success("Chapter published");
-        router.refresh();
-      }
-    } catch {
-      toast.error("Something went wrong");
-    } finally {
-      setIsLoading(false);
-    }*/
+    if (isPublished) {
+      unpublishChapter({ chapterId, courseId })
+        .then(() => {
+          toast.success("Chapter unpublished");
+        })
+        .catch(() => {
+          toast.error("Something went wrong");
+        });
+    } else {
+      publishChapter({ chapterId, courseId })
+        .then(() => {
+          toast.success("Chapter published");
+        })
+        .catch(() => {
+          toast.error("Something went wrong");
+        });
+    }
   };
 
   return (
