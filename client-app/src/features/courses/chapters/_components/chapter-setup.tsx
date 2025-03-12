@@ -9,6 +9,7 @@ import { ChapterActions } from "./chapter-actions";
 import { ChapterTitleForm } from "./forms/chapter-title-form";
 import { ChapterDescriptionForm } from "./forms/chapter-description-form";
 import { ChapterAccessForm } from "./forms/chapter-access-form";
+import { ChapterVideoForm } from "./forms/chapter-video-form";
 
 export const ChapterSetup = () => {
   const courseId = useCourseId();
@@ -73,7 +74,7 @@ export const ChapterSetup = () => {
               <IconBadge icon={Video} />
               <h2 className="text-xl">Add a video</h2>
             </div>
-            ChapterVideoForm
+            <ChapterVideoForm initialData={chapter} courseId={courseId} chapterid={chapterId} />
           </div>
         </div>
       </div>

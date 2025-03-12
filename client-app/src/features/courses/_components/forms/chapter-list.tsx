@@ -32,18 +32,6 @@ export const ChapterList = ({ onEdit, onReorder, items }: ChapterListProps) => {
 
     const reorderedIds = items.reduce((acc, curr) => [...acc, curr.id], [] as string[]);
     onReorder(reorderedIds);
-
-    /*const startIndex = Math.min(result.source.index, result.destination.index);
-    const endIndex = Math.max(result.source.index, result.destination.index);
-    const updatedChapters = items.slice(startIndex, endIndex + 1);
-
-    setChapters(items);
-    const bulkUpdatedData = updatedChapters.map((chapter) => ({
-      id: chapter.id,
-      position: items.findIndex((item) => item.id === chapter.id),
-    }));
-
-    onReorder(bulkUpdatedData);*/
   };
 
   if (!isMounted) {
