@@ -33,6 +33,7 @@ public class Get
             var course = await _dataContext
                 .Courses.Include(course => course.Chapters.OrderBy(chapter => chapter.Position))
                 .Include(course => course.Attachments.OrderBy(a => a.Name))
+                .AsSingleQuery()
                 .SingleOrDefaultAsync(
                     course => course.Id == request.Id,
                     cancellationToken: cancellationToken

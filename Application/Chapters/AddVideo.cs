@@ -1,22 +1,23 @@
 ﻿using Application.Common;
 using Application.Common.Interfaces;
+using Application.Courses;
 using AutoMapper;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Courses;
+namespace Application.Chapters;
 
-public class AddImage
+public class AddVideo
 {
-    public class Command : IRequest<Result<CourseDto>>
+    public class Command : IRequest<Result<ChapterDto>>
     {
         public required Guid Id { get; set; }
         public required string FileName { get; set; }
         public required byte[] Content { get; set; }
     }
 
-    public class Handler : IRequestHandler<Command, Result<CourseDto>>
+    public class Handler : IRequestHandler<Command, Result<ChapterDto>>
     {
         private readonly IStorageService _storageService;
         private readonly IDataContext _dataContext;
@@ -29,42 +30,42 @@ public class AddImage
             _mapper = mapper;
         }
 
-        public async Task<Result<CourseDto>> Handle(
+        public async Task<Result<ChapterDto>> Handle(
             Command request,
             CancellationToken cancellationToken
         )
         {
-            var course = await _dataContext.Courses.SingleOrDefaultAsync(
-                course => course.Id == request.Id,
+            var chapter = await _dataContext.Chapters.SingleOrDefaultAsync(
+                chapter => chapter.Id == request.Id,
                 cancellationToken: cancellationToken
             );
-            if (course == null)
+            if (chapter == null)
             {
-                return Result<CourseDto>.NotFound();
+                return Result<ChapterDto>.NotFound();
             }
 
             var uploadResult = await _storageService.AddAsync(request.FileName, request.Content);
             if (uploadResult == null)
             {
-                return Result<CourseDto>.Failure("Error during uploading image");
+                return Result<ChapterDto>.Failure("Error during uploading video");
             }
 
-            if (!string.IsNullOrEmpty(course.ImagePublicId))
+            if (!string.IsNullOrEmpty(chapter.VideoPublicId))
             {
-                await _storageService.DeleteAsync(course.ImagePublicId);
+                await _storageService.DeleteAsync(chapter.VideoPublicId);
             }
 
-            course.ImageUrl = uploadResult.URI;
-            course.ImagePublicId = uploadResult.PublicId;
+            chapter.VideoUrl = uploadResult.URI;
+            chapter.VideoPublicId = uploadResult.PublicId;
 
             try
             {
                 await _dataContext.SaveChangesAsync(cancellationToken);
-                return Result<CourseDto>.Success(_mapper.Map<CourseDto>(course));
+                return Result<ChapterDto>.Success(_mapper.Map<ChapterDto>(chapter));
             }
             catch (Exception)
             {
-                return Result<CourseDto>.Failure("Unable to update the Course");
+                return Result<ChapterDto>.Failure("Unable to update the Chapter");
             }
         }
     }

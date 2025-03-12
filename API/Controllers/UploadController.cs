@@ -37,4 +37,21 @@ public class UploadController : BaseApiController
         );
         return HandleResult(result);
     }
+
+    [HttpPost("chapters/{Id}")]
+    public async Task<IActionResult> AddChapterVideo(Guid Id, [FromForm] IFormFile file)
+    {
+        using var memoryStream = new MemoryStream();
+        await file.CopyToAsync(memoryStream);
+
+        var result = await Mediator.Send(
+            new Application.Chapters.AddVideo.Command
+            {
+                Id = Id,
+                FileName = file.FileName,
+                Content = memoryStream.ToArray(),
+            }
+        );
+        return HandleResult(result);
+    }
 }

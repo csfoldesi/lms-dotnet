@@ -15,5 +15,7 @@
         public required Course Course { get; set; }
 
         public ICollection<UserProgress> UserProgresses { get; set; } = [];
+
+        public string? VideoPublicId { get; set; }
     }
 }
