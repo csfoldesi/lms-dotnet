@@ -1,15 +1,12 @@
-"use client";
-
 import { ConfirmModal } from "@/components/confirm-modal";
 //import { ConfirmModal } from "@/components/modals/confirm-modal";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "@tanstack/react-router";
-//import { useConfettiStore } from "@/hooks/use-confetti-store";
-import axios from "axios";
+import { useConfettiStore } from "@/hooks/use-confetti-store";
 import { Trash } from "lucide-react";
-//import { useRouter } from "next/navigation";
-import { useState } from "react";
 import toast from "react-hot-toast";
+import { usePublishCourse } from "../api/use-publish-course";
+import { useUnpublishCourse } from "../api/use-unpublish-course";
 
 interface ActionsProps {
   courseId: string;
@@ -17,13 +14,16 @@ interface ActionsProps {
   disabled: boolean;
 }
 
-export const Actions = ({ courseId, isPublished, disabled }: ActionsProps) => {
+export const CourseActions = ({ courseId, isPublished, disabled }: ActionsProps) => {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
-  //const confetti = useConfettiStore();
+  const confetti = useConfettiStore();
+  const { publishCourse, isPending: isPublishing } = usePublishCourse();
+  const { unpublishCourse, isPending: isUnpublishing } = useUnpublishCourse();
+
+  const isLoading = isPublishing || isUnpublishing;
 
   const onDelete = async () => {
-    setIsLoading(true);
+    /*setIsLoading(true);
     try {
       await axios.delete(`/api/courses/${courseId}`);
       toast.success("Course deleted");
@@ -32,24 +32,27 @@ export const Actions = ({ courseId, isPublished, disabled }: ActionsProps) => {
       toast.error("Something went wrong");
     } finally {
       setIsLoading(false);
-    }
+    }*/
   };
 
   const onTogglePublish = async () => {
-    try {
-      setIsLoading(true);
-      if (isPublished) {
-        //await axios.patch(`/api/courses/${courseId}/unpublish`);
-        toast.success("Course unpublished");
-      } else {
-        //await axios.patch(`/api/courses/${courseId}/publish`);
-        toast.success("Course published");
-        //confetti.onOpen();
-      }
-    } catch {
-      toast.error("Something went wrong");
-    } finally {
-      setIsLoading(false);
+    if (isPublished) {
+      unpublishCourse({ id: courseId })
+        .then(() => {
+          toast.success("Course unpublished");
+        })
+        .catch(() => {
+          toast.error("Something went wrong");
+        });
+    } else {
+      publishCourse({ id: courseId })
+        .then(() => {
+          toast.success("Course published");
+          confetti.onOpen();
+        })
+        .catch(() => {
+          toast.error("Something went wrong");
+        });
     }
   };
 

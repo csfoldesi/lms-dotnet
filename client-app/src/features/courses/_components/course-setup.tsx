@@ -1,7 +1,7 @@
 import { useCourseId } from "@/hooks/use-course-id";
 import { useGetCourse } from "../api/use-get-course";
 import { Banner } from "@/components/banner";
-import { Actions } from "./actions";
+import { CourseActions } from "./course-actions";
 import { IconBadge } from "@/components/icon-badge";
 import { CircleDollarSign, LayoutDashboard, ListChecks, File } from "lucide-react";
 import { TitleForm } from "./forms/title-form";
@@ -42,7 +42,7 @@ export const CourseSetup = () => {
             <h1 className="text-2xl font-medium">Course setup</h1>
             <span className="text-sm text-slate-700">Complete all field {completionText}</span>
           </div>
-          <Actions disabled={!isComplete} courseId={courseId} isPublished={course.isPublished!} />
+          <CourseActions disabled={!isComplete} courseId={courseId} isPublished={course.isPublished!} />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
           <div>
