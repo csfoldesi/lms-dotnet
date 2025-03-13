@@ -70,4 +70,18 @@ public class CoursesController : BaseApiController
         );
         return HandleResult(result);
     }
+
+    [HttpPatch("{Id}/publish")]
+    public async Task<IActionResult> Publish(Guid Id)
+    {
+        var result = await Mediator.Send(new Publish.Command { Id = Id });
+        return HandleResult(result);
+    }
+
+    [HttpPatch("{Id}/unpublish")]
+    public async Task<IActionResult> Unpublish(Guid Id)
+    {
+        var result = await Mediator.Send(new Unpublish.Command { Id = Id });
+        return HandleResult(result);
+    }
 }
