@@ -51,7 +51,7 @@ public class Unpublish
             }
             catch (Exception)
             {
-                return Result<CourseDto>.Failure("Unable to publish the Course");
+                return Result<CourseDto>.Failure("Unable to unpublish the Course");
             }
         }
     }
