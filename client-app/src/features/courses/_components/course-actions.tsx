@@ -1,5 +1,3 @@
-import { ConfirmModal } from "@/components/confirm-modal";
-//import { ConfirmModal } from "@/components/modals/confirm-modal";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "@tanstack/react-router";
 import { useConfettiStore } from "@/hooks/use-confetti-store";
@@ -7,6 +5,7 @@ import { Trash } from "lucide-react";
 import toast from "react-hot-toast";
 import { usePublishCourse } from "../api/use-publish-course";
 import { useUnpublishCourse } from "../api/use-unpublish-course";
+import { useConfirm } from "@/hooks/use-confirm";
 
 interface ActionsProps {
   courseId: string;
@@ -19,10 +18,19 @@ export const CourseActions = ({ courseId, isPublished, disabled }: ActionsProps)
   const confetti = useConfettiStore();
   const { publishCourse, isPending: isPublishing } = usePublishCourse();
   const { unpublishCourse, isPending: isUnpublishing } = useUnpublishCourse();
+  const [ConfirmDialog, confirm] = useConfirm(
+    "Delete this course?",
+    "You are about to delete this course. This action is irreversible."
+  );
 
   const isLoading = isPublishing || isUnpublishing;
 
   const onDelete = async () => {
+    const ok = await confirm();
+    if (!ok) return;
+
+    console.log("deleting course");
+
     /*setIsLoading(true);
     try {
       await axios.delete(`/api/courses/${courseId}`);
@@ -65,11 +73,10 @@ export const CourseActions = ({ courseId, isPublished, disabled }: ActionsProps)
         size="sm">
         {isPublished ? "Unpublish" : "Publish"}
       </Button>
-      <ConfirmModal onConfirm={onDelete}>
-        <Button size="sm" disabled={isLoading}>
-          <Trash className="h-4 w-4" />
-        </Button>
-      </ConfirmModal>
+      <ConfirmDialog />
+      <Button size="sm" disabled={isLoading} onClick={onDelete}>
+        <Trash className="h-4 w-4" />
+      </Button>
     </div>
   );
 };

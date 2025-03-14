@@ -1,10 +1,11 @@
-import { ConfirmModal } from "@/components/confirm-modal";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "@tanstack/react-router";
 import { Trash } from "lucide-react";
 import toast from "react-hot-toast";
 import { usePublishChapter } from "../api/use-publish-chapter";
 import { useUnpublishChapter } from "../api/use-unpublish-chapter";
+import { useConfirm } from "@/hooks/use-confirm";
+import { useDeleteChapter } from "../api/use-delete-chapter";
 
 interface ChapterActionsProps {
   courseId: string;
@@ -17,21 +18,26 @@ export const ChapterActions = ({ courseId, chapterId, isPublished, disabled }: C
   const navigate = useNavigate();
   const { publishChapter, isPending: isPublishing } = usePublishChapter();
   const { unpublishChapter, isPending: isUnpublishing } = useUnpublishChapter();
+  const { deleteChapter, isPending: isDeleting } = useDeleteChapter();
+  const [ConfirmDialog, confirm] = useConfirm(
+    "Delete this chapter?",
+    "You are about to delete this chapter. This action is irreversible."
+  );
 
-  const isLoading = isPublishing || isUnpublishing;
+  const isLoading = isPublishing || isUnpublishing || isDeleting;
 
   const onDelete = async () => {
-    /*setIsLoading(true);
-    try {
-      await axios.delete(`/api/courses/${courseId}/chapters/${chapterId}`);
-      toast.success("Chapter deleted");
-      router.refresh();
-      router.push(`/teacher/courses/${courseId}`);
-    } catch {
-      toast.error("Something went wrong");
-    } finally {
-      setIsLoading(false);
-    }*/
+    const ok = await confirm();
+    if (!ok) return;
+
+    deleteChapter({ chapterId, courseId })
+      .then(() => {
+        toast.success("Chapter deleted");
+        navigate({ to: "/teacher/courses/$courseId", params: { courseId } });
+      })
+      .catch(() => {
+        toast.error("Something went wrong");
+      });
   };
 
   const onTogglePublish = async () => {
@@ -63,11 +69,10 @@ export const ChapterActions = ({ courseId, chapterId, isPublished, disabled }: C
         size="sm">
         {isPublished ? "Unpublish" : "Publish"}
       </Button>
-      <ConfirmModal onConfirm={onDelete}>
-        <Button size="sm" disabled={isLoading}>
-          <Trash className="h-4 w-4" />
-        </Button>
-      </ConfirmModal>
+      <ConfirmDialog />
+      <Button size="sm" disabled={isLoading} onClick={onDelete}>
+        <Trash className="h-4 w-4" />
+      </Button>
     </div>
   );
 };
