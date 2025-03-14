@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { usePublishCourse } from "../api/use-publish-course";
 import { useUnpublishCourse } from "../api/use-unpublish-course";
 import { useConfirm } from "@/hooks/use-confirm";
+import { useDeleteCourse } from "../api/use-delete-course";
 
 interface ActionsProps {
   courseId: string;
@@ -18,29 +19,26 @@ export const CourseActions = ({ courseId, isPublished, disabled }: ActionsProps)
   const confetti = useConfettiStore();
   const { publishCourse, isPending: isPublishing } = usePublishCourse();
   const { unpublishCourse, isPending: isUnpublishing } = useUnpublishCourse();
+  const { deleteCourse, isPending: isDeleting } = useDeleteCourse();
   const [ConfirmDialog, confirm] = useConfirm(
     "Delete this course?",
     "You are about to delete this course. This action is irreversible."
   );
 
-  const isLoading = isPublishing || isUnpublishing;
+  const isLoading = isPublishing || isUnpublishing || isDeleting;
 
   const onDelete = async () => {
     const ok = await confirm();
     if (!ok) return;
 
-    console.log("deleting course");
-
-    /*setIsLoading(true);
-    try {
-      await axios.delete(`/api/courses/${courseId}`);
-      toast.success("Course deleted");
-      navigate({ to: "/teacher/courses" });
-    } catch {
-      toast.error("Something went wrong");
-    } finally {
-      setIsLoading(false);
-    }*/
+    deleteCourse({ id: courseId })
+      .then(() => {
+        toast.success("Course deleted");
+        navigate({ to: "/teacher/courses" });
+      })
+      .catch(() => {
+        toast.error("Something went wrong");
+      });
   };
 
   const onTogglePublish = async () => {

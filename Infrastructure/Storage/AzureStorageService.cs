@@ -34,4 +34,9 @@ public class AzureStorageService : IStorageService
         }
         return "OK";
     }
+
+    public Task<string?> DeleteListAsync(List<string> publicIdList)
+    {
+        throw new NotImplementedException();
+    }
 }

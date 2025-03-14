@@ -51,4 +51,15 @@ public class CloudinaryServices : IStorageService
         var result = await _cloudinary.DestroyAsync(deleteParams);
         return result.Result == "ok" ? result.Result : null;
     }
+
+    public async Task<string?> DeleteListAsync(List<string> publicIdList)
+    {
+        var deleteParams = new DelResParams()
+        {
+            PublicIds = publicIdList,
+            ResourceType = ResourceType.Raw,
+        };
+        var result = await _cloudinary.DeleteResourcesAsync(deleteParams);
+        return result.StatusCode == System.Net.HttpStatusCode.OK ? "ok" : null;
+    }
 }
