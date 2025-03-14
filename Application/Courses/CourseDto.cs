@@ -13,6 +13,7 @@ namespace Application.Courses
         public bool IsPublished { get; set; }
 
         public Guid? CategoryId { get; set; }
+        public string? Category { get; set; }
 
         public List<ChapterDto> Chapters { get; set; } = [];
 

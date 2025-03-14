@@ -9,7 +9,11 @@ public class MappingProfiles : AutoMapper.Profile
 {
     public MappingProfiles()
     {
-        CreateMap<Course, CourseDto>();
+        CreateMap<Course, CourseDto>()
+            .ForMember(
+                x => x.Category,
+                ex => ex.MapFrom(c => c.Category != null ? c.Category.Name : null)
+            );
 
         CreateMap<Courses.Modify.Command, Course>()
             .ForAllMembers(opts =>

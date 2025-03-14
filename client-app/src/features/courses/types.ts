@@ -8,6 +8,7 @@ export type Course = {
   price?: number;
   isPublished?: boolean;
   categoryId?: string;
+  category?: string;
   chapters: Chapter[];
   attachments: Attachment[];
 };

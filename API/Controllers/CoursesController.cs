@@ -6,6 +6,13 @@ namespace API.Controllers;
 
 public class CoursesController : BaseApiController
 {
+    [HttpGet]
+    public async Task<IActionResult> List()
+    {
+        var result = await Mediator.Send(new List.Query { });
+        return HandleResult(result);
+    }
+
     [HttpGet("{Id}")]
     public async Task<IActionResult> Get(Guid Id)
     {
