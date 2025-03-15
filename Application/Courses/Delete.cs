@@ -62,7 +62,10 @@ public class Delete
                     .Chapters.Where(c => !string.IsNullOrEmpty(c.VideoPublicId))
                     .Select(c => c.VideoPublicId!)
             );
-            await _storageService.DeleteListAsync(publicIdsToDelete);
+            if (publicIdsToDelete.Count > 0)
+            {
+                await _storageService.DeleteListAsync(publicIdsToDelete);
+            }
 
             _dataContext.Courses.Remove(course);
 
