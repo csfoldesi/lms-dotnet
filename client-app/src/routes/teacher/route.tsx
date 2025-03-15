@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Sidebar } from "@/features/dashboard/sidebar/sidebar";
 import { useAuth, UserButton } from "@clerk/clerk-react";
 import { createFileRoute, Link, Navigate, Outlet } from "@tanstack/react-router";
 import { LogOut } from "lucide-react";
@@ -24,7 +25,9 @@ function RouteComponent() {
           <UserButton />
         </div>
       </div>
-      <div className="hidden md:flex h-full w-56 flex-col fixed inset-y-0 z-50">Sidebar</div>
+      <div className="hidden md:flex h-full w-56 flex-col fixed inset-y-0 z-50">
+        <Sidebar type="teacher" />
+      </div>
       <main className="md:pl-56 pt-[80px] h-full">
         <Outlet />
       </main>

@@ -19,7 +19,7 @@ function RouteComponent() {
         <UserButton />
       </div>
       <div className="hidden md:flex h-full w-56 flex-col fixed inset-y-0 z-50">
-        <Sidebar />
+        <Sidebar type="default" />
       </div>
       <main className="md:pl-56 pt-[80px] h-full">
         <Outlet />
