@@ -8,7 +8,11 @@ namespace Application.Courses;
 
 public class List
 {
-    public class Query : IRequest<Result<List<CourseDto>>> { }
+    public class Query : IRequest<Result<List<CourseDto>>>
+    {
+        public Guid? CategoryId { get; set; }
+        public string? Title { get; set; }
+    }
 
     public class Handler : IRequestHandler<Query, Result<List<CourseDto>>>
     {
@@ -26,13 +30,26 @@ public class List
             CancellationToken cancellationToken
         )
         {
-            var courses = await _dataContext
+            var query = _dataContext
                 .Courses.Include(course => course.Chapters.OrderBy(chapter => chapter.Position))
                 .Include(course => course.Attachments.OrderBy(a => a.Name))
                 .Include(course => course.Category)
                 .AsSingleQuery()
-                .OrderBy(course => course.Title)
-                .ToListAsync(cancellationToken: cancellationToken);
+                .OrderBy(course => course.Title);
+            if (request.CategoryId != null)
+            {
+                query =
+                    (IOrderedQueryable<Domain.Course>)
+                        query.Where(c => c.CategoryId == request.CategoryId);
+            }
+            if (request.Title != null)
+            {
+                query =
+                    (IOrderedQueryable<Domain.Course>)
+                        query.Where(c => c.Title.Contains(request.Title));
+            }
+
+            var courses = await query.ToListAsync(cancellationToken: cancellationToken);
 
             return Result<List<CourseDto>>.Success(_mapper.Map<List<CourseDto>>(courses));
         }

@@ -7,9 +7,11 @@ namespace API.Controllers;
 public class CoursesController : BaseApiController
 {
     [HttpGet]
-    public async Task<IActionResult> List()
+    public async Task<IActionResult> List([FromQuery] CourseSearchRequest request)
     {
-        var result = await Mediator.Send(new List.Query { });
+        var result = await Mediator.Send(
+            new List.Query { CategoryId = request.CategoryId, Title = request.Title }
+        );
         return HandleResult(result);
     }
 
