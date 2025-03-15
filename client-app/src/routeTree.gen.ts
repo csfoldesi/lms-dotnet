@@ -19,6 +19,7 @@ import { Route as DashboardIndexImport } from './routes/_dashboard/index'
 import { Route as TeacherAnalyticsImport } from './routes/teacher/analytics'
 import { Route as DashboardSearchImport } from './routes/_dashboard/search'
 import { Route as TeacherCoursesIndexImport } from './routes/teacher/courses/index'
+import { Route as CoursesCourseIdIndexImport } from './routes/courses_/$courseId/index'
 import { Route as TeacherCoursesCreateImport } from './routes/teacher/courses/create'
 import { Route as TeacherCoursesCourseIdIndexImport } from './routes/teacher/courses/$courseId/index'
 import { Route as CoursesCourseIdChaptersChapterIdImport } from './routes/courses_/$courseId/chapters_/$chapterId'
@@ -71,6 +72,12 @@ const TeacherCoursesIndexRoute = TeacherCoursesIndexImport.update({
   id: '/courses/',
   path: '/courses/',
   getParentRoute: () => TeacherRouteRoute,
+} as any)
+
+const CoursesCourseIdIndexRoute = CoursesCourseIdIndexImport.update({
+  id: '/$courseId/',
+  path: '/$courseId/',
+  getParentRoute: () => CoursesRouteRoute,
 } as any)
 
 const TeacherCoursesCreateRoute = TeacherCoursesCreateImport.update({
@@ -160,6 +167,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeacherCoursesCreateImport
       parentRoute: typeof TeacherRouteImport
     }
+    '/courses_/$courseId/': {
+      id: '/courses_/$courseId/'
+      path: '/$courseId'
+      fullPath: '/courses/$courseId'
+      preLoaderRoute: typeof CoursesCourseIdIndexImport
+      parentRoute: typeof CoursesRouteImport
+    }
     '/teacher/courses/': {
       id: '/teacher/courses/'
       path: '/courses'
@@ -208,10 +222,12 @@ const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(
 )
 
 interface CoursesRouteRouteChildren {
+  CoursesCourseIdIndexRoute: typeof CoursesCourseIdIndexRoute
   CoursesCourseIdChaptersChapterIdRoute: typeof CoursesCourseIdChaptersChapterIdRoute
 }
 
 const CoursesRouteRouteChildren: CoursesRouteRouteChildren = {
+  CoursesCourseIdIndexRoute: CoursesCourseIdIndexRoute,
   CoursesCourseIdChaptersChapterIdRoute: CoursesCourseIdChaptersChapterIdRoute,
 }
 
@@ -249,6 +265,7 @@ export interface FileRoutesByFullPath {
   '/': typeof DashboardIndexRoute
   '/auth': typeof AuthIndexRoute
   '/teacher/courses/create': typeof TeacherCoursesCreateRoute
+  '/courses/$courseId': typeof CoursesCourseIdIndexRoute
   '/teacher/courses': typeof TeacherCoursesIndexRoute
   '/courses/$courseId/chapters/$chapterId': typeof CoursesCourseIdChaptersChapterIdRoute
   '/teacher/courses/$courseId': typeof TeacherCoursesCourseIdIndexRoute
@@ -263,6 +280,7 @@ export interface FileRoutesByTo {
   '/': typeof DashboardIndexRoute
   '/auth': typeof AuthIndexRoute
   '/teacher/courses/create': typeof TeacherCoursesCreateRoute
+  '/courses/$courseId': typeof CoursesCourseIdIndexRoute
   '/teacher/courses': typeof TeacherCoursesIndexRoute
   '/courses/$courseId/chapters/$chapterId': typeof CoursesCourseIdChaptersChapterIdRoute
   '/teacher/courses/$courseId': typeof TeacherCoursesCourseIdIndexRoute
@@ -279,6 +297,7 @@ export interface FileRoutesById {
   '/_dashboard/': typeof DashboardIndexRoute
   '/auth/': typeof AuthIndexRoute
   '/teacher/courses/create': typeof TeacherCoursesCreateRoute
+  '/courses_/$courseId/': typeof CoursesCourseIdIndexRoute
   '/teacher/courses/': typeof TeacherCoursesIndexRoute
   '/courses_/$courseId/chapters_/$chapterId': typeof CoursesCourseIdChaptersChapterIdRoute
   '/teacher/courses/$courseId/': typeof TeacherCoursesCourseIdIndexRoute
@@ -296,6 +315,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/teacher/courses/create'
+    | '/courses/$courseId'
     | '/teacher/courses'
     | '/courses/$courseId/chapters/$chapterId'
     | '/teacher/courses/$courseId'
@@ -309,6 +329,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/teacher/courses/create'
+    | '/courses/$courseId'
     | '/teacher/courses'
     | '/courses/$courseId/chapters/$chapterId'
     | '/teacher/courses/$courseId'
@@ -323,6 +344,7 @@ export interface FileRouteTypes {
     | '/_dashboard/'
     | '/auth/'
     | '/teacher/courses/create'
+    | '/courses_/$courseId/'
     | '/teacher/courses/'
     | '/courses_/$courseId/chapters_/$chapterId'
     | '/teacher/courses/$courseId/'
@@ -370,6 +392,7 @@ export const routeTree = rootRoute
     "/courses_": {
       "filePath": "courses_/route.tsx",
       "children": [
+        "/courses_/$courseId/",
         "/courses_/$courseId/chapters_/$chapterId"
       ]
     },
@@ -401,6 +424,10 @@ export const routeTree = rootRoute
     "/teacher/courses/create": {
       "filePath": "teacher/courses/create.tsx",
       "parent": "/teacher"
+    },
+    "/courses_/$courseId/": {
+      "filePath": "courses_/$courseId/index.tsx",
+      "parent": "/courses_"
     },
     "/teacher/courses/": {
       "filePath": "teacher/courses/index.tsx",

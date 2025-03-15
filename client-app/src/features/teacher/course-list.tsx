@@ -3,7 +3,7 @@ import { DataTable } from "../courses/_components/course-list/data-table";
 import { columns } from "../courses/_components/course-list/columns";
 
 export const CourseList = () => {
-  const { data: courseList } = useGetCourseList();
+  const { data: courseList } = useGetCourseList({});
 
   if (!courseList) return null;
 
