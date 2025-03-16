@@ -1,5 +1,6 @@
 using API.Extensions;
 using Application;
+using Infrastructure.Identity;
 using Infrastructure.Persistence;
 using Infrastructure.Seeds;
 using Infrastructure.Storage;
@@ -11,6 +12,7 @@ builder.Services.AddAPIServices(builder.Configuration);
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddApplicationServices();
 builder.Services.AddStorageServices(builder.Configuration);
+builder.Services.AddIdentityServices(builder.Configuration);
 
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
@@ -29,6 +31,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors("CorsPolicy");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

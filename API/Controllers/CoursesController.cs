@@ -1,12 +1,14 @@
 ﻿using API.Dto;
 using Application.Courses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
+[Authorize]
 public class CoursesController : BaseApiController
 {
-    [HttpGet]
+    [HttpGet, AllowAnonymous]
     public async Task<IActionResult> List([FromQuery] CourseSearchRequest request)
     {
         var result = await Mediator.Send(
