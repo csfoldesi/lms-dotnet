@@ -29,14 +29,14 @@ public static class ServiceRegistration
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                     // Clerk uses JWKS for signing key validation
-                    IssuerSigningKeyResolver = (token, securityToken, kid, parameters) =>
+                    /*IssuerSigningKeyResolver = (token, securityToken, kid, parameters) =>
                     {
                         // Fetch JWKS from Clerk
                         var jwksClient = new HttpClient();
                         var jwksResponse = jwksClient.GetStringAsync(config.JwksUrl).Result;
                         var jwks = new JsonWebKeySet(jwksResponse);
                         return jwks.Keys;
-                    },
+                    },*/
                 };
 
                 // Map Clerk claims to ASP.NET Core claims
