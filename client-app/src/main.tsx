@@ -7,6 +7,7 @@ import { ClerkProvider } from "@clerk/clerk-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
 import { ConfettiProvider } from "./components/providers/confetti-provider";
+import { AuthHandler } from "./features/auth/auth-handler";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 if (!PUBLISHABLE_KEY) {
@@ -26,6 +27,7 @@ const queryClient = new QueryClient();
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
+      <AuthHandler />
       <QueryClientProvider client={queryClient}>
         <Toaster />
         <ConfettiProvider />
