@@ -1,41 +1,20 @@
-import axios from "axios";
+import { useAuth } from "@clerk/clerk-react";
+import axios, { AxiosInstance } from "axios";
 
 export const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true,
 });
 
-client.interceptors.request.use((config) => {
-  const token = localStorage.getItem("clerk-jwt");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+export const useAuthClient = () => {
+  const { getToken } = useAuth();
 
-
-/*client.interceptors.request.use(
-  async (config) => {
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);*/
-
-/*createAuthRefreshInterceptor(
-  client,
-  async () => {
-    try {
-      await client.get("/auth/refresh-token");
-      return Promise.resolve;
-    } catch {
-      return Promise.reject;
+  async function setClientToken(client: AxiosInstance) {
+    const token = await getToken();
+    if (token) {
+      client.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     }
-  },
-  {
-    statusCodes: [401],
-    pauseInstanceWhileRefreshing: true,
   }
-);
-*/
+
+  return { setClientToken };
+};
