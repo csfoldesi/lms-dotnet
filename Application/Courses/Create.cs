@@ -18,11 +18,13 @@ namespace Application.Courses
         {
             private readonly IDataContext _dataContext;
             private readonly IMapper _mapper;
+            private readonly IUser _user;
 
-            public Handler(IDataContext dataContext, IMapper mapper)
+            public Handler(IDataContext dataContext, IMapper mapper, IUser user)
             {
                 _dataContext = dataContext;
                 _mapper = mapper;
+                _user = user;
             }
 
             public async Task<Result<CourseDto>> Handle(
@@ -33,7 +35,7 @@ namespace Application.Courses
                 var course = new Course
                 {
                     Id = Guid.NewGuid(),
-                    UserId = request.UserId,
+                    UserId = _user.Id!,
                     Title = request.Title,
                 };
 

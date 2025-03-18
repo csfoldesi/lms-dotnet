@@ -1,4 +1,6 @@
 ﻿using System.Reflection;
+using API.Services;
+using Application.Common.Interfaces;
 
 namespace API.Extensions;
 
@@ -11,7 +13,7 @@ public static class ApplicationServiceExtensions
     {
         services.AddControllers();
         services.AddEndpointsApiExplorer();
-        //services.AddScoped<IUser, CurrentUser>();
+        services.AddScoped<IUser, CurrentUser>();
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         services.AddOpenApi();
 
