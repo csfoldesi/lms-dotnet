@@ -2,6 +2,7 @@
 using Application.Common.Interfaces;
 using Application.Courses;
 using AutoMapper;
+using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,15 +38,13 @@ public class Reorder
                     course => course.Id == request.CourseID,
                     cancellationToken: cancellationToken
                 );
-            if (course == null)
-            {
-                return Result<CourseDto>.NotFound("Course not found");
-            }
+
+            Helper.AssertIsNotNull(course, "Course not found");
 
             int positionIndex = 0;
             request.ChapterIdList.ForEach(chapterId =>
             {
-                var chapter = course.Chapters.SingleOrDefault(chapter => chapter.Id == chapterId);
+                var chapter = course!.Chapters.SingleOrDefault(chapter => chapter.Id == chapterId);
                 if (chapter != null)
                 {
                     chapter.Position = positionIndex;

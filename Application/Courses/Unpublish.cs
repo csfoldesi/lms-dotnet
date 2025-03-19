@@ -35,14 +35,11 @@ public class Unpublish
                 cancellationToken: cancellationToken
             );
 
-            if (course == null)
-            {
-                return Result<CourseDto>.NotFound();
-            }
+            Helper.AssertIsNotNull(course, "Course not found");
 
             // TODO: handle existing purchases
 
-            course.IsPublished = false;
+            course!.IsPublished = false;
 
             try
             {

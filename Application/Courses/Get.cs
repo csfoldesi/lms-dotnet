@@ -39,10 +39,7 @@ public class Get
                     cancellationToken: cancellationToken
                 );
 
-            if (course == null)
-            {
-                return Result<CourseDto>.NotFound();
-            }
+            Helper.AssertIsNotNull(course, "Course not found");
 
             return Result<CourseDto>.Success(_mapper.Map<CourseDto>(course));
         }

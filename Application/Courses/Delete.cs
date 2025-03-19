@@ -41,14 +41,11 @@ public class Delete
                     cancellationToken: cancellationToken
                 );
 
-            if (course == null)
-            {
-                return Result<CourseDto>.NotFound();
-            }
+            Helper.AssertIsNotNull(course, "Course not found");
 
             // Delete resources from Storage
             List<string> publicIdsToDelete = [];
-            if (!string.IsNullOrEmpty(course.ImagePublicId))
+            if (!string.IsNullOrEmpty(course!.ImagePublicId))
             {
                 publicIdsToDelete.Add(course.ImagePublicId);
             }

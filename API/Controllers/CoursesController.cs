@@ -26,7 +26,7 @@ public class CoursesController : BaseApiController
         return HandleResult(result);
     }
 
-    [HttpGet("{Id:guid}")]
+    [HttpGet("{Id:guid}"), AllowAnonymous]
     public async Task<IActionResult> Get(Guid Id)
     {
         var result = await Mediator.Send(new Get.Query { Id = Id });

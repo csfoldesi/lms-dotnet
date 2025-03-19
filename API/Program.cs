@@ -1,4 +1,5 @@
 using API.Extensions;
+using API.Middleware;
 using Application;
 using Infrastructure.Identity;
 using Infrastructure.Persistence;
@@ -27,6 +28,8 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 app.UseCors("CorsPolicy");

@@ -38,13 +38,10 @@ public class Delete
                     cancellationToken: cancellationToken
                 );
 
-            if (chapter == null)
-            {
-                return Result<ChapterDto>.NotFound();
-            }
+            Helper.AssertIsNotNull(chapter, "Chapter not found");
 
             // delete video from storage
-            if (!string.IsNullOrEmpty(chapter.VideoPublicId))
+            if (!string.IsNullOrEmpty(chapter!.VideoPublicId))
             {
                 await _storageService.DeleteAsync(chapter.VideoPublicId);
             }

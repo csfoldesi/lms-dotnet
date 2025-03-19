@@ -37,16 +37,14 @@ public class Modify
                 chapter => chapter.Id == request.Id,
                 cancellationToken: cancellationToken
             );
-            if (chapter == null)
-            {
-                return Result<ChapterDto>.NotFound();
-            }
+
+            Helper.AssertIsNotNull(chapter, "Chapter not found");
 
             _mapper.Map(request, chapter);
-            // TODO: this is a quick and dirty fix
+            // TODO: this is a just quick and dirty fix
             if (request.IsFree.HasValue)
             {
-                chapter.IsFree = request.IsFree.Value;
+                chapter!.IsFree = request.IsFree.Value;
             }
 
             try

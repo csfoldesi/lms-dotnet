@@ -41,17 +41,14 @@ namespace Application.Courses
                     cancellationToken: cancellationToken
                 );
 
-                if (course == null)
-                {
-                    return Result<CourseDto>.NotFound();
-                }
+                Helper.AssertIsNotNull(course, "Course not found");
 
                 _mapper.Map(request, course);
 
                 try
                 {
                     await _dataContext.SaveChangesAsync(cancellationToken);
-                    return Result<CourseDto>.Success(_mapper.Map<Course, CourseDto>(course));
+                    return Result<CourseDto>.Success(_mapper.Map<Course, CourseDto>(course!));
                 }
                 catch (Exception)
                 {

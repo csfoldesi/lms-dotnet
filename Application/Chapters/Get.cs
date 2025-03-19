@@ -34,12 +34,9 @@ public class Get
                 cancellationToken: cancellationToken
             );
 
-            if (chapter == null)
-            {
-                return Result<ChapterDto>.NotFound();
-            }
+            Helper.AssertIsNotNull(chapter, "Chapter not found");
 
-            return Result<ChapterDto>.Success(_mapper.Map<ChapterDto>(chapter));
+            return Result<ChapterDto>.Success(_mapper.Map<ChapterDto>(chapter!));
         }
     }
 }

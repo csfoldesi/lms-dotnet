@@ -35,12 +35,10 @@ public class Unpublish
                     chapter => chapter.Id == request.Id,
                     cancellationToken: cancellationToken
                 );
-            if (chapter == null)
-            {
-                return Result<ChapterDto>.NotFound();
-            }
 
-            chapter.IsPublished = false;
+            Helper.AssertIsNotNull(chapter, "Chapter not found");
+
+            chapter!.IsPublished = false;
 
             var remainingPublishedChaptersFound = await _dataContext.Chapters.AnyAsync(
                 c => c.CourseId == chapter.CourseId && c.Id != chapter.Id && c.IsPublished,

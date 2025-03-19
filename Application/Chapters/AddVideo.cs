@@ -39,10 +39,7 @@ public class AddVideo
                 chapter => chapter.Id == request.Id,
                 cancellationToken: cancellationToken
             );
-            if (chapter == null)
-            {
-                return Result<ChapterDto>.NotFound();
-            }
+            Helper.AssertIsNotNull(chapter, "Chapter not found");
 
             var uploadResult = await _storageService.AddAsync(request.FileName, request.Content);
             if (uploadResult == null)
@@ -50,7 +47,7 @@ public class AddVideo
                 return Result<ChapterDto>.Failure("Error during uploading video");
             }
 
-            if (!string.IsNullOrEmpty(chapter.VideoPublicId))
+            if (!string.IsNullOrEmpty(chapter!.VideoPublicId))
             {
                 await _storageService.DeleteAsync(chapter.VideoPublicId);
             }

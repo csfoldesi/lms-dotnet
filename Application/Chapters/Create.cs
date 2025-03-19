@@ -37,12 +37,9 @@ public class Create
                     course => course.Id == request.CourseId,
                     cancellationToken: cancellationToken
                 );
-            if (course == null)
-            {
-                return Result<ChapterDto>.NotFound("Course not found");
-            }
+            Helper.AssertIsNotNull(course, "Course not found");
 
-            var chaptersCount = course.Chapters.Count;
+            var chaptersCount = course!.Chapters.Count;
 
             var chapter = new Chapter
             {

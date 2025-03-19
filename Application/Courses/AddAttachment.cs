@@ -38,10 +38,7 @@ public class AddAttachment
                 course => course.Id == request.Id,
                 cancellationToken: cancellationToken
             );
-            if (course == null)
-            {
-                return Result<CourseDto>.NotFound();
-            }
+            Helper.AssertIsNotNull(course, "Course not found");
 
             var uploadResult = await _storageService.AddAsync(request.FileName, request.Content);
             if (uploadResult == null)
@@ -55,7 +52,7 @@ public class AddAttachment
                 Url = uploadResult.URI,
                 Name = request.FileName,
                 PublicId = uploadResult.PublicId,
-                Course = course,
+                Course = course!,
             };
 
             _dataContext.Attachments.Add(attachment);
@@ -63,7 +60,7 @@ public class AddAttachment
             try
             {
                 await _dataContext.SaveChangesAsync(cancellationToken);
-                return Result<CourseDto>.Success(_mapper.Map<Course, CourseDto>(course));
+                return Result<CourseDto>.Success(_mapper.Map<Course, CourseDto>(course!));
             }
             catch (Exception)
             {

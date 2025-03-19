@@ -37,12 +37,9 @@ public class Publish
                     cancellationToken: cancellationToken
                 );
 
-            if (course == null)
-            {
-                return Result<CourseDto>.NotFound();
-            }
+            Helper.AssertIsNotNull(course, "Course not found");
 
-            var publishedChaptersFound = course.Chapters.Any(c => c.IsPublished);
+            var publishedChaptersFound = course!.Chapters.Any(c => c.IsPublished);
             if (!publishedChaptersFound)
             {
                 return Result<CourseDto>.Failure("No published chapter found");

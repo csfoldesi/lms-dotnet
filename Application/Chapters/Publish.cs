@@ -33,13 +33,11 @@ public class Publish
                 chapter => chapter.Id == request.Id,
                 cancellationToken: cancellationToken
             );
-            if (chapter == null)
-            {
-                return Result<ChapterDto>.NotFound();
-            }
+
+            Helper.AssertIsNotNull(chapter, "Chapter not found");
 
             if (
-                string.IsNullOrEmpty(chapter.Title)
+                string.IsNullOrEmpty(chapter!.Title)
                 || string.IsNullOrEmpty(chapter.Description)
                 || string.IsNullOrEmpty(chapter.VideoUrl)
             )

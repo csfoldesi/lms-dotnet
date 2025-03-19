@@ -38,10 +38,7 @@ public class AddImage
                 course => course.Id == request.Id,
                 cancellationToken: cancellationToken
             );
-            if (course == null)
-            {
-                return Result<CourseDto>.NotFound();
-            }
+            Helper.AssertIsNotNull(course, "Course not found");
 
             var uploadResult = await _storageService.AddAsync(request.FileName, request.Content);
             if (uploadResult == null)
@@ -49,7 +46,7 @@ public class AddImage
                 return Result<CourseDto>.Failure("Error during uploading image");
             }
 
-            if (!string.IsNullOrEmpty(course.ImagePublicId))
+            if (!string.IsNullOrEmpty(course!.ImagePublicId))
             {
                 await _storageService.DeleteAsync(course.ImagePublicId);
             }
