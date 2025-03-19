@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Courses;
 
-public class List
+public class ListPublished
 {
     public class Query : IRequest<Result<List<CourseDto>>>
     {
@@ -31,7 +31,8 @@ public class List
         )
         {
             var query = _dataContext
-                .Courses.Include(course => course.Chapters.OrderBy(chapter => chapter.Position))
+                .Courses.Where(course => course.IsPublished)
+                .Include(course => course.Chapters.OrderBy(chapter => chapter.Position))
                 .Include(course => course.Attachments.OrderBy(a => a.Name))
                 .Include(course => course.Category)
                 .AsSingleQuery()

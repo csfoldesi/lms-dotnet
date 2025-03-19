@@ -9,15 +9,24 @@ namespace API.Controllers;
 public class CoursesController : BaseApiController
 {
     [HttpGet, AllowAnonymous]
-    public async Task<IActionResult> List([FromQuery] CourseSearchRequest request)
+    public async Task<IActionResult> ListPublished([FromQuery] CourseSearchRequest request)
     {
         var result = await Mediator.Send(
-            new List.Query { CategoryId = request.CategoryId, Title = request.Title }
+            new ListPublished.Query { CategoryId = request.CategoryId, Title = request.Title }
         );
         return HandleResult(result);
     }
 
-    [HttpGet("{Id}")]
+    [HttpGet("teacher")]
+    public async Task<IActionResult> ListOwned([FromQuery] CourseSearchRequest request)
+    {
+        var result = await Mediator.Send(
+            new ListOwned.Query { CategoryId = request.CategoryId, Title = request.Title }
+        );
+        return HandleResult(result);
+    }
+
+    [HttpGet("{Id:guid}")]
     public async Task<IActionResult> Get(Guid Id)
     {
         var result = await Mediator.Send(new Get.Query { Id = Id });
