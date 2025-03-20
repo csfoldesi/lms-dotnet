@@ -24,11 +24,13 @@ namespace Application.Courses
         {
             private readonly IDataContext _dataContext;
             private readonly IMapper _mapper;
+            private readonly IUser _user;
 
-            public Handler(IDataContext dataContext, IMapper mapper)
+            public Handler(IDataContext dataContext, IMapper mapper, IUser user)
             {
                 _dataContext = dataContext;
                 _mapper = mapper;
+                _user = user;
             }
 
             public async Task<Result<CourseDto>> Handle(
@@ -42,6 +44,7 @@ namespace Application.Courses
                 );
 
                 Helper.AssertIsNotNull(course, "Course not found");
+                Helper.AssertIsOwner(course!, _user.Id!);
 
                 _mapper.Map(request, course);
 

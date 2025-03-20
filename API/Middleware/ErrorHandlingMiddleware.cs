@@ -37,6 +37,12 @@ public class ErrorHandlingMiddleware
                     new { IsSuccess = false, ErrorMessage = exception.Message }
                 );
                 break;
+            case Application.Common.Exceptions.UnauthorizedException _:
+                code = HttpStatusCode.Unauthorized;
+                result = JsonSerializer.Serialize(
+                    new { IsSuccess = false, ErrorMessage = exception.Message }
+                );
+                break;
             default:
                 result = JsonSerializer.Serialize(
                     new { error = "An error occurred while processing your request." }

@@ -12,4 +12,12 @@ public static class Helper
             throw new NotFoundException(message);
         }
     }
+
+    public static void AssertIsOwner(Course course, string userId, string? message = null)
+    {
+        if (course.UserId != userId)
+        {
+            throw new UnauthorizedException(message);
+        }
+    }
 }

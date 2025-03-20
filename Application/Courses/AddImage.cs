@@ -21,12 +21,19 @@ public class AddImage
         private readonly IStorageService _storageService;
         private readonly IDataContext _dataContext;
         private readonly IMapper _mapper;
+        private readonly IUser _user;
 
-        public Handler(IStorageService storageService, IDataContext dataContext, IMapper mapper)
+        public Handler(
+            IStorageService storageService,
+            IDataContext dataContext,
+            IMapper mapper,
+            IUser user
+        )
         {
             _storageService = storageService;
             _dataContext = dataContext;
             _mapper = mapper;
+            _user = user;
         }
 
         public async Task<Result<CourseDto>> Handle(
@@ -38,20 +45,19 @@ public class AddImage
                 course => course.Id == request.Id,
                 cancellationToken: cancellationToken
             );
+
             Helper.AssertIsNotNull(course, "Course not found");
+            Helper.AssertIsOwner(course!, _user.Id!);
 
             var uploadResult = await _storageService.AddAsync(request.FileName, request.Content);
-            if (uploadResult == null)
-            {
-                return Result<CourseDto>.Failure("Error during uploading image");
-            }
+            Helper.AssertIsNotNull(uploadResult, "Error during uploading image");
 
             if (!string.IsNullOrEmpty(course!.ImagePublicId))
             {
                 await _storageService.DeleteAsync(course.ImagePublicId);
             }
 
-            course.ImageUrl = uploadResult.URI;
+            course.ImageUrl = uploadResult!.URI;
             course.ImagePublicId = uploadResult.PublicId;
 
             try

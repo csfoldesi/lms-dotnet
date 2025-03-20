@@ -21,12 +21,19 @@ public class AddAttachment
         private readonly IStorageService _storageService;
         private readonly IDataContext _dataContext;
         private readonly IMapper _mapper;
+        private readonly IUser _user;
 
-        public Handler(IStorageService storageService, IDataContext dataContext, IMapper mapper)
+        public Handler(
+            IStorageService storageService,
+            IDataContext dataContext,
+            IMapper mapper,
+            IUser user
+        )
         {
             _storageService = storageService;
             _dataContext = dataContext;
             _mapper = mapper;
+            _user = user;
         }
 
         public async Task<Result<CourseDto>> Handle(
@@ -38,18 +45,17 @@ public class AddAttachment
                 course => course.Id == request.Id,
                 cancellationToken: cancellationToken
             );
+
             Helper.AssertIsNotNull(course, "Course not found");
+            Helper.AssertIsOwner(course!, _user.Id!);
 
             var uploadResult = await _storageService.AddAsync(request.FileName, request.Content);
-            if (uploadResult == null)
-            {
-                return Result<CourseDto>.Failure("Error during uploading image");
-            }
+            Helper.AssertIsNotNull(uploadResult, "Error during uploading attachment");
 
             var attachment = new Attachment
             {
                 Id = Guid.NewGuid(),
-                Url = uploadResult.URI,
+                Url = uploadResult!.URI,
                 Name = request.FileName,
                 PublicId = uploadResult.PublicId,
                 Course = course!,
@@ -64,7 +70,7 @@ public class AddAttachment
             }
             catch (Exception)
             {
-                return Result<CourseDto>.Failure("Unable to delete the Course");
+                return Result<CourseDto>.Failure("Unable to update the Course");
             }
         }
     }

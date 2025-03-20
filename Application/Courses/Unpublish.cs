@@ -18,11 +18,13 @@ public class Unpublish
     {
         private readonly IDataContext _dataContext;
         private readonly IMapper _mapper;
+        private readonly IUser _user;
 
-        public Handler(IDataContext dataContext, IMapper mapper)
+        public Handler(IDataContext dataContext, IMapper mapper, IUser user)
         {
             _dataContext = dataContext;
             _mapper = mapper;
+            _user = user;
         }
 
         public async Task<Result<CourseDto>> Handle(
@@ -36,6 +38,7 @@ public class Unpublish
             );
 
             Helper.AssertIsNotNull(course, "Course not found");
+            Helper.AssertIsOwner(course!, _user.Id!);
 
             // TODO: handle existing purchases
 
