@@ -1,8 +1,6 @@
 ﻿using Application.Common;
 using Application.Common.Interfaces;
-using Application.Courses;
 using AutoMapper;
-using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,12 +20,19 @@ public class AddVideo
         private readonly IStorageService _storageService;
         private readonly IDataContext _dataContext;
         private readonly IMapper _mapper;
+        private readonly IUser _user;
 
-        public Handler(IStorageService storageService, IDataContext dataContext, IMapper mapper)
+        public Handler(
+            IStorageService storageService,
+            IDataContext dataContext,
+            IMapper mapper,
+            IUser user
+        )
         {
             _storageService = storageService;
             _dataContext = dataContext;
             _mapper = mapper;
+            _user = user;
         }
 
         public async Task<Result<ChapterDto>> Handle(
@@ -35,11 +40,15 @@ public class AddVideo
             CancellationToken cancellationToken
         )
         {
-            var chapter = await _dataContext.Chapters.SingleOrDefaultAsync(
-                chapter => chapter.Id == request.Id,
-                cancellationToken: cancellationToken
-            );
+            var chapter = await _dataContext
+                .Chapters.Include(chapter => chapter.Course)
+                .SingleOrDefaultAsync(
+                    chapter => chapter.Id == request.Id,
+                    cancellationToken: cancellationToken
+                );
+
             Helper.AssertIsNotNull(chapter, "Chapter not found");
+            Helper.AssertIsOwner(chapter!.Course, _user.Id!);
 
             var uploadResult = await _storageService.AddAsync(request.FileName, request.Content);
             if (uploadResult == null)

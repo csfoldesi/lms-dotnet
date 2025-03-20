@@ -1,6 +1,7 @@
 ﻿using Application.Common;
 using Application.Common.Interfaces;
 using AutoMapper;
+using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,12 +19,19 @@ public class Delete
         private readonly IDataContext _dataContext;
         private readonly IMapper _mapper;
         private readonly IStorageService _storageService;
+        private readonly IUser _user;
 
-        public Handler(IDataContext dataContext, IMapper mapper, IStorageService storageService)
+        public Handler(
+            IDataContext dataContext,
+            IMapper mapper,
+            IStorageService storageService,
+            IUser user
+        )
         {
             _dataContext = dataContext;
             _mapper = mapper;
             _storageService = storageService;
+            _user = user;
         }
 
         public async Task<Result<ChapterDto>> Handle(
@@ -39,6 +47,7 @@ public class Delete
                 );
 
             Helper.AssertIsNotNull(chapter, "Chapter not found");
+            Helper.AssertIsOwner(chapter!.Course, _user.Id!);
 
             // delete video from storage
             if (!string.IsNullOrEmpty(chapter!.VideoPublicId))

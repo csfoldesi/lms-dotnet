@@ -21,11 +21,13 @@ public class Modify
     {
         private readonly IDataContext _dataContext;
         private readonly IMapper _mapper;
+        private readonly IUser _user;
 
-        public Handler(IDataContext dataContext, IMapper mapper)
+        public Handler(IDataContext dataContext, IMapper mapper, IUser user)
         {
             _dataContext = dataContext;
             _mapper = mapper;
+            _user = user;
         }
 
         public async Task<Result<ChapterDto>> Handle(
@@ -33,12 +35,15 @@ public class Modify
             CancellationToken cancellationToken
         )
         {
-            var chapter = await _dataContext.Chapters.SingleOrDefaultAsync(
-                chapter => chapter.Id == request.Id,
-                cancellationToken: cancellationToken
-            );
+            var chapter = await _dataContext
+                .Chapters.Include(chapter => chapter.Course)
+                .SingleOrDefaultAsync(
+                    chapter => chapter.Id == request.Id,
+                    cancellationToken: cancellationToken
+                );
 
             Helper.AssertIsNotNull(chapter, "Chapter not found");
+            Helper.AssertIsOwner(chapter!.Course, _user.Id!);
 
             _mapper.Map(request, chapter);
             // TODO: this is a just quick and dirty fix

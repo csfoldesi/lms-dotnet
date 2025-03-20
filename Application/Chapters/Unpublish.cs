@@ -17,11 +17,13 @@ public class Unpublish
     {
         private readonly IDataContext _dataContext;
         private readonly IMapper _mapper;
+        private readonly IUser _user;
 
-        public Handler(IDataContext dataContext, IMapper mapper)
+        public Handler(IDataContext dataContext, IMapper mapper, IUser user)
         {
             _dataContext = dataContext;
             _mapper = mapper;
+            _user = user;
         }
 
         public async Task<Result<ChapterDto>> Handle(
@@ -37,6 +39,7 @@ public class Unpublish
                 );
 
             Helper.AssertIsNotNull(chapter, "Chapter not found");
+            Helper.AssertIsOwner(chapter!.Course, _user.Id!);
 
             chapter!.IsPublished = false;
 
