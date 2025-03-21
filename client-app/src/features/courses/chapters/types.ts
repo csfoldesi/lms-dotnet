@@ -7,6 +7,7 @@ export type Chapter = {
   isPublished: boolean;
   isFree: boolean;
   muxData?: MuxData;
+  userProgress: UserProgress[];
 };
 
 export type MuxData = {
@@ -15,7 +16,7 @@ export type MuxData = {
 };
 
 export type UserProgress = {
-  userId: string;
+  //userId: string;
   chapterId: string;
   isCompleted: boolean;
 };

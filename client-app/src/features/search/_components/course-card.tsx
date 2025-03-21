@@ -6,6 +6,7 @@ import { CourseProgress } from "./course-progress";
 
 interface CourseCardProps {
   id: string;
+  chapterId: string;
   title: string;
   imageUrl: string;
   chaptersLength: number;
@@ -14,9 +15,18 @@ interface CourseCardProps {
   category?: string;
 }
 
-export const CourseCard = ({ id, title, imageUrl, chaptersLength, price, progress, category }: CourseCardProps) => {
+export const CourseCard = ({
+  id,
+  chapterId,
+  title,
+  imageUrl,
+  chaptersLength,
+  price,
+  progress,
+  category,
+}: CourseCardProps) => {
   return (
-    <Link to="/courses/$courseId" params={{ courseId: id }}>
+    <Link to="/courses/$courseId/chapters/$chapterId" params={{ courseId: id, chapterId }}>
       <div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full">
         <div className="relative w-full aspect-video rounded-md overflow-hidden">
           <img className="object-cover" alt={title} src={imageUrl} />

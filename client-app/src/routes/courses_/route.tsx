@@ -1,23 +1,49 @@
+import { Button } from "@/components/ui/button";
+import { useGetCourse } from "@/features/courses/api/use-get-course";
+import { CourseSidebar } from "@/features/playback/_components/course-sidebar";
+import { useCourseId } from "@/hooks/use-course-id";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
+import { LogOut } from "lucide-react";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/courses_")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const courseId = useCourseId();
+  const { data: course, isLoading } = useGetCourse(courseId);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLoading || !course || course.chapters.length === 0) return;
+    navigate({ to: "/courses/$courseId/chapters/$chapterId", params: { courseId, chapterId: course.chapters[0].id } });
+  }, [isLoading, course, navigate, courseId]);
+
+  const progressCount = 0;
+
   return (
     <div className="h-fll">
       <div className="h-[80px] md:pl-56 fixed inset-y-0 w-full z-50">
-        Course playback Navbar
-        <SignedOut>
-          <SignInButton />
-        </SignedOut>
-        <SignedIn>
-          <UserButton />
-        </SignedIn>
+        <div className="flex justify-end items-center h-full pr-4 bg-background">
+          <Link to="/search">
+            <Button size="sm" variant="ghost" className="cursor-pointer mr-2">
+              <LogOut className="h-4 w-4 mr-2" />
+              Exit course
+            </Button>
+          </Link>
+          <SignedOut>
+            <SignInButton />
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+        </div>
       </div>
-      <div className="hidden md:flex h-full w-56 flex-col fixed inset-y-0 z-50">Sidebar</div>
+      <div className="hidden md:flex h-full w-56 flex-col fixed inset-y-0 z-50">
+        <CourseSidebar course={course} progressCount={progressCount} />
+      </div>
       <main className="md:pl-56 pt-[80px] h-full">
         <Outlet />
       </main>

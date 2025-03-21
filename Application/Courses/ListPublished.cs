@@ -18,11 +18,13 @@ public class ListPublished
     {
         private readonly IDataContext _dataContext;
         private readonly IMapper _mapper;
+        private readonly IUser _user;
 
-        public Handler(IDataContext dataContext, IMapper mapper)
+        public Handler(IDataContext dataContext, IMapper mapper, IUser user)
         {
             _dataContext = dataContext;
             _mapper = mapper;
+            _user = user;
         }
 
         public async Task<Result<List<CourseDto>>> Handle(
@@ -33,8 +35,10 @@ public class ListPublished
             var query = _dataContext
                 .Courses.Where(course => course.IsPublished)
                 .Include(course => course.Chapters.OrderBy(chapter => chapter.Position))
+                .ThenInclude(chapter => chapter.UserProgresses.Where(u => u.UserId == _user.Id))
                 .Include(course => course.Attachments.OrderBy(a => a.Name))
                 .Include(course => course.Category)
+                .Include(course => course.Purchases.Where(p => p.UserId == _user.Id))
                 .AsSingleQuery()
                 .OrderBy(course => course.Title);
             if (request.CategoryId != null)
