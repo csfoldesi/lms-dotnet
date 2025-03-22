@@ -34,7 +34,9 @@ public class ListPublished
         {
             var query = _dataContext
                 .Courses.Where(course => course.IsPublished)
-                .Include(course => course.Chapters.OrderBy(chapter => chapter.Position))
+                .Include(course =>
+                    course.Chapters.Where(c => c.IsPublished).OrderBy(c => c.Position)
+                )
                 .ThenInclude(chapter => chapter.UserProgresses.Where(u => u.UserId == _user.Id))
                 .Include(course => course.Attachments.OrderBy(a => a.Name))
                 .Include(course => course.Category)
