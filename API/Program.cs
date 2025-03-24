@@ -2,6 +2,7 @@ using API.Extensions;
 using API.Middleware;
 using Application;
 using Infrastructure.Identity;
+using Infrastructure.Payment;
 using Infrastructure.Persistence;
 using Infrastructure.Seeds;
 using Infrastructure.Storage;
@@ -14,6 +15,7 @@ builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddApplicationServices();
 builder.Services.AddStorageServices(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
+builder.Services.AddPaymentServices(builder.Configuration);
 
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())

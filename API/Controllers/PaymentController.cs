@@ -1,65 +1,38 @@
-﻿using Application.Courses;
+﻿using Application.Payment;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Stripe;
 
 namespace API.Controllers;
 
 public class PaymentController : BaseApiController
 {
-    private readonly string _webhookSecret;
-
-    public PaymentController(IConfiguration configuration)
-    {
-        _webhookSecret = configuration["StripeSettings:WebhookSecret"]!;
-    }
-
-    [HttpPost("{Id:guid}/checkout"), AllowAnonymous]
+    [HttpPost("{Id:guid}/checkout")]
     public async Task<IActionResult> Checkout(Guid Id)
     {
-        var result = await Mediator.Send(new Enroll.Command { Id = Id });
+        var result = await Mediator.Send(new CreateCheckoutSession.Command { CourseId = Id });
         return HandleResult(result);
     }
 
     [HttpPost("webhook"), AllowAnonymous]
-    public async Task<IActionResult> Webhook()
+    public async Task<IActionResult> StripeWebhook()
     {
-        var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-
         try
         {
-            var stripeEvent = EventUtility.ConstructEvent(
-                json,
-                Request.Headers["Stripe-Signature"],
-                _webhookSecret
+            var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+            // Suppress Sonar warning - webhook signature verification requires raw request data
+#pragma warning disable S6932 // Use model binding instead of reading raw request data
+            await Mediator.Send(
+                new WebHook.Command
+                {
+                    Request = json,
+                    Signature = Request.Headers["Stripe-Signature"]!,
+                }
             );
-
-            // Handle specific event types
-            /*switch (stripeEvent.Type)
-            {
-                case Events.PaymentIntentSucceeded:
-                    var paymentIntent = stripeEvent.Data.Object as PaymentIntent;
-                    // Handle successful payment
-                    Console.WriteLine($"Payment succeeded for {paymentIntent.Amount}!");
-                    // Update order in database, send confirmation email, etc.
-                    break;
-
-                case Events.PaymentIntentPaymentFailed:
-                    paymentIntent = stripeEvent.Data.Object as PaymentIntent;
-                    // Handle failed payment
-                    Console.WriteLine($"Payment failed for {paymentIntent.Amount}!");
-                    break;
-
-                default:
-                    Console.WriteLine($"Unhandled event type: {stripeEvent.Type}");
-                    break;
-            }*/
-
-            return Ok();
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            return BadRequest();
+            //TODO: log errors
         }
+        return Ok();
     }
 }

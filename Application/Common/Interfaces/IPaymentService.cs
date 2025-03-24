@@ -9,4 +9,6 @@ public interface IPaymentService
         Guid CourseId,
         string UserId
     );
+
+    PaymentResult HandleWebHook(string Result, string Signature);
 }
