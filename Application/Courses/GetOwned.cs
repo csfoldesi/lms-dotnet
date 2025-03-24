@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Courses;
 
-public class Get
+public class GetOwned
 {
     public class Query : IRequest<Result<CourseDto>>
     {
@@ -32,29 +32,18 @@ public class Get
         )
         {
             var course = await _dataContext
-                .Courses.Include(course =>
-                    course.Chapters.Where(c => c.IsPublished).OrderBy(chapter => chapter.Position)
-                )
+                .Courses.Include(course => course.Chapters.OrderBy(chapter => chapter.Position))
                 .Include(course => course.Attachments.OrderBy(a => a.Name))
                 .AsSingleQuery()
                 .SingleOrDefaultAsync(
-                    c => c.Id == request.Id && c.IsPublished,
+                    c => c.Id == request.Id,
                     cancellationToken: cancellationToken
                 );
 
             Helper.AssertIsNotNull(course, "Course not found");
+            Helper.AssertIsOwner(course!, _user.Id!);
 
-            var result = _mapper.Map<CourseDto>(course);
-
-            if (_user != null)
-            {
-                result.IsPurchased = await _dataContext.Purchases.AnyAsync(
-                    p => p.CourseId == course!.Id && p.UserId == _user.Id,
-                    cancellationToken: cancellationToken
-                );
-            }
-
-            return Result<CourseDto>.Success(result);
+            return Result<CourseDto>.Success(_mapper.Map<CourseDto>(course));
         }
     }
 }

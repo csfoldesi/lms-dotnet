@@ -51,4 +51,20 @@ public class ChaptersController : BaseApiController
         var result = await Mediator.Send(new Unpublish.Command { Id = Id });
         return HandleResult(result);
     }
+
+    [HttpPut("{Id}/progress")]
+    public async Task<IActionResult> ToggleProgress(
+        Guid Id,
+        [FromBody] ToggleProgressRequest progressToggleRequest
+    )
+    {
+        var result = await Mediator.Send(
+            new ToggleProgress.Command
+            {
+                ChapterId = Id,
+                IsCompleted = progressToggleRequest.IsCompleted,
+            }
+        );
+        return HandleResult(result);
+    }
 }

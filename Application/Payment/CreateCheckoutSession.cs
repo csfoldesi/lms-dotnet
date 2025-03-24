@@ -36,6 +36,15 @@ public class CreateCheckoutSession
 
             Helper.AssertIsNotNull(course);
 
+            var alreadyPurchased = await _dataContext.Purchases.AnyAsync(
+                p => p.CourseId == request.CourseId && p.UserId == _user.Id,
+                cancellationToken: cancellationToken
+            );
+            if (alreadyPurchased)
+            {
+                return Result<string>.Failure("Already purchased course");
+            }
+
             var result = await _paymentService.CreateCheckoutSessionAsync(
                 course!.Title,
                 course.Description!,

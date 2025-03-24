@@ -17,11 +17,13 @@ public class Get
     {
         private readonly IDataContext _dataContext;
         private readonly IMapper _mapper;
+        private readonly IUser _user;
 
-        public Handler(IDataContext dataContext, IMapper mapper)
+        public Handler(IDataContext dataContext, IMapper mapper, IUser user)
         {
             _dataContext = dataContext;
             _mapper = mapper;
+            _user = user;
         }
 
         public async Task<Result<ChapterDto>> Handle(
@@ -36,7 +38,30 @@ public class Get
 
             Helper.AssertIsNotNull(chapter, "Chapter not found");
 
-            return Result<ChapterDto>.Success(_mapper.Map<ChapterDto>(chapter!));
+            var result = _mapper.Map<ChapterDto>(chapter!);
+
+            if (_user != null)
+            {
+                result.IsCompleted = await _dataContext.UserProgresses.AnyAsync(
+                    u => u.ChapterId == chapter!.Id && u.UserId == _user.Id && u.IsCompleted,
+                    cancellationToken: cancellationToken
+                );
+
+                var nextChapter = await _dataContext
+                    .Chapters.Where(c =>
+                        c.CourseId == chapter!.CourseId
+                        && c.IsPublished
+                        && c.Position > chapter!.Position
+                    )
+                    .OrderBy(c => c.Position)
+                    .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+                if (nextChapter != null)
+                {
+                    result.NextChapterId = nextChapter.Id;
+                }
+            }
+
+            return Result<ChapterDto>.Success(result);
         }
     }
 }

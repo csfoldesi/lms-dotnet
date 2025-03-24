@@ -18,5 +18,7 @@ namespace Application.Courses
         public List<ChapterDto> Chapters { get; set; } = [];
 
         public List<AttachmentDto> Attachments { get; set; } = [];
+
+        public bool IsPurchased { get; set; }
     }
 }

@@ -33,6 +33,13 @@ public class CoursesController : BaseApiController
         return HandleResult(result);
     }
 
+    [HttpGet("{Id:guid}/teacher")]
+    public async Task<IActionResult> GetOwned(Guid Id)
+    {
+        var result = await Mediator.Send(new GetOwned.Query { Id = Id });
+        return HandleResult(result);
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create(CourseCreateRequest request)
     {
