@@ -20,5 +20,6 @@ namespace Application.Courses
         public List<AttachmentDto> Attachments { get; set; } = [];
 
         public bool IsPurchased { get; set; }
+        public float UserProgress { get; set; } = 0;
     }
 }

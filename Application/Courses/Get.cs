@@ -35,7 +35,9 @@ public class Get
                 .Courses.Include(course =>
                     course.Chapters.Where(c => c.IsPublished).OrderBy(chapter => chapter.Position)
                 )
+                .ThenInclude(chapter => chapter.UserProgresses.Where(u => u.UserId == _user.Id))
                 .Include(course => course.Attachments.OrderBy(a => a.Name))
+                .Include(course => course.Purchases.Where(p => p.UserId == _user.Id))
                 .AsSingleQuery()
                 .SingleOrDefaultAsync(
                     c => c.Id == request.Id && c.IsPublished,
@@ -44,17 +46,7 @@ public class Get
 
             Helper.AssertIsNotNull(course, "Course not found");
 
-            var result = _mapper.Map<CourseDto>(course);
-
-            if (_user != null)
-            {
-                result.IsPurchased = await _dataContext.Purchases.AnyAsync(
-                    p => p.CourseId == course!.Id && p.UserId == _user.Id,
-                    cancellationToken: cancellationToken
-                );
-            }
-
-            return Result<CourseDto>.Success(result);
+            return Result<CourseDto>.Success(_mapper.Map<CourseDto>(course));
         }
     }
 }
