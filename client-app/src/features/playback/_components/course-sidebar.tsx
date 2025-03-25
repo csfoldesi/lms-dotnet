@@ -9,16 +9,14 @@ interface CourseSidebarProps {
   progressCount: number;
 }
 
-export const CourseSidebar = async ({ course, progressCount }: CourseSidebarProps) => {
-  const purchase = false;
-
+export const CourseSidebar = ({ course, progressCount }: CourseSidebarProps) => {
   if (!course) return null;
 
   return (
     <div className="h-full border-r flex flex-col overflow-y-auto shadow-sm">
       <div className="flex flex-col p-8 border-b">
         <h1 className="font-semibold">{course.title}</h1>
-        {purchase && (
+        {course.isPurchased && (
           <div className="mt-10">
             <CourseProgress variant="success" value={progressCount} />
           </div>
@@ -30,9 +28,9 @@ export const CourseSidebar = async ({ course, progressCount }: CourseSidebarProp
             key={chapter.id}
             id={chapter.id}
             label={chapter.title}
-            isCompleted={!!chapter.userProgress?.[0]?.isCompleted}
+            isCompleted={!!chapter.isCompleted}
             courseId={course.id}
-            isLocked={!chapter.isFree && !purchase}
+            isLocked={!chapter.isFree && !course.isPurchased}
           />
         ))}
       </div>

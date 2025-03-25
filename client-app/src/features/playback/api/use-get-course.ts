@@ -1,7 +1,7 @@
 import { client, useAuthClient } from "@/client";
 import { AxiosError } from "axios";
-import { Course } from "../types";
 import { useQuery } from "@tanstack/react-query";
+import { Course } from "@/features/courses/types";
 
 export const useGetCourse = (id: string) => {
   const { setClientToken } = useAuthClient();

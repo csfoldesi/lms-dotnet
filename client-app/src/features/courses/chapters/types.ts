@@ -8,6 +8,8 @@ export type Chapter = {
   isFree: boolean;
   muxData?: MuxData;
   userProgress: UserProgress[];
+  isCompleted?: boolean;
+  nextChapterId?: string;
 };
 
 export type MuxData = {

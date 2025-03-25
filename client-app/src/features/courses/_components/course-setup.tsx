@@ -1,5 +1,5 @@
 import { useCourseId } from "@/hooks/use-course-id";
-import { useGetCourse } from "../api/use-get-course";
+import { useGetTeacherCourse } from "../api/use-get-teacher-course";
 import { Banner } from "@/components/banner";
 import { CourseActions } from "./course-actions";
 import { IconBadge } from "@/components/icon-badge";
@@ -15,7 +15,7 @@ import { useGetCategories } from "../api/use-get-categories";
 
 export const CourseSetup = () => {
   const courseId = useCourseId();
-  const { data: course } = useGetCourse(courseId);
+  const { data: course } = useGetTeacherCourse(courseId);
   const { data: categories } = useGetCategories();
 
   if (!course) return null;

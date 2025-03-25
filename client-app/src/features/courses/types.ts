@@ -11,6 +11,8 @@ export type Course = {
   category?: string;
   chapters: Chapter[];
   attachments: Attachment[];
+  isPurchased?: boolean;
+  userProgress: number;
 };
 
 export type Category = {

@@ -18,7 +18,8 @@ export const CoursesList = ({ items }: CoursesListProps) => {
             imageUrl={item.imageUrl!}
             chaptersLength={item.chapters.length}
             price={item.price!}
-            progress={0}
+            progress={item.userProgress}
+            isPurchased={!!item.isPurchased}
             category={item.category}
           />
         ))}
