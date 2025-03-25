@@ -13,8 +13,8 @@ import { useGetCourse } from "../api/use-get-course";
 export const ChapterPlayback = () => {
   const courseId = useCourseId();
   const chapterId = useChapterId();
-  const { data: course, isLoading: isLoadingCourse } = useGetCourse(courseId);
-  const { data: chapter, isLoading: isLoadingChapter } = useGetChapter(chapterId);
+  const { data: course } = useGetCourse(courseId);
+  const { data: chapter} = useGetChapter(chapterId);
 
   const isLocked = !chapter?.isFree && !course?.isPurchased;
   const completeOnEnd = !!(course?.isPurchased && !chapter?.isCompleted);
