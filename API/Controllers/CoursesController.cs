@@ -26,6 +26,13 @@ public class CoursesController : BaseApiController
         return HandleResult(result);
     }
 
+    [HttpGet("purchased")]
+    public async Task<IActionResult> ListPurchased()
+    {
+        var result = await Mediator.Send(new ListPurchased.Query { });
+        return HandleResult(result);
+    }
+
     [HttpGet("{Id:guid}"), AllowAnonymous]
     public async Task<IActionResult> Get(Guid Id)
     {
