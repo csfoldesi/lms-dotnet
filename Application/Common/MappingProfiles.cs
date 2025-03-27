@@ -19,11 +19,16 @@ public class MappingProfiles : AutoMapper.Profile
                 x => x.UserProgress,
                 ex =>
                     ex.MapFrom(c =>
-                        Math.Ceiling(
-                            (float)c.Chapters.Count(ch => ch.UserProgresses.Any(u => u.IsCompleted))
-                                * 100
-                                / c.Chapters.Count
-                        )
+                        c.Chapters.Count == 0
+                            ? 0
+                            : Math.Ceiling(
+                                (float)
+                                    c.Chapters.Count(ch =>
+                                        ch.UserProgresses.Any(u => u.IsCompleted)
+                                    )
+                                    * 100
+                                    / c.Chapters.Count
+                            )
                     )
             );
 
