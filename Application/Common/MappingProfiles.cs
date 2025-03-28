@@ -11,26 +11,11 @@ public class MappingProfiles : AutoMapper.Profile
     {
         CreateMap<Course, CourseDto>()
             .ForMember(
-                x => x.Category,
-                ex => ex.MapFrom(c => c.Category != null ? c.Category.Name : null)
+                dest => dest.Category,
+                opt => opt.MapFrom(src => src.Category != null ? src.Category.Name : null)
             )
-            .ForMember(x => x.IsPurchased, ex => ex.MapFrom(c => c.Purchases.Count > 0))
-            .ForMember(
-                x => x.UserProgress,
-                ex =>
-                    ex.MapFrom(c =>
-                        c.Chapters.Count == 0
-                            ? 0
-                            : Math.Ceiling(
-                                (float)
-                                    c.Chapters.Count(ch =>
-                                        ch.UserProgresses.Any(u => u.IsCompleted)
-                                    )
-                                    * 100
-                                    / c.Chapters.Count
-                            )
-                    )
-            );
+            .ForMember(dest => dest.IsPurchased, opt => opt.MapFrom(src => src.Purchases.Count > 0))
+            .AfterMap((src, dest) => MapUserProgress(src, dest));
 
         CreateMap<Courses.Modify.Command, Course>()
             .ForAllMembers(opts =>
@@ -48,8 +33,8 @@ public class MappingProfiles : AutoMapper.Profile
 
         CreateMap<Chapter, ChapterDto>()
             .ForMember(
-                x => x.IsCompleted,
-                ex => ex.MapFrom(c => c.UserProgresses.Any(u => u.IsCompleted))
+                dest => dest.IsCompleted,
+                opt => opt.MapFrom(src => src.UserProgresses.Any(u => u.IsCompleted))
             );
 
         CreateMap<Attachment, AttachmentDto>();
@@ -65,5 +50,21 @@ public class MappingProfiles : AutoMapper.Profile
                         )
                 )
             );
+    }
+
+    private static void MapUserProgress(Course course, CourseDto dto)
+    {
+        if (course.Chapters.Count == 0)
+        {
+            dto.UserProgress = 0;
+        }
+        else
+        {
+            int completedChapters = course.Chapters.Count(ch =>
+                ch.UserProgresses.Any(u => u.IsCompleted)
+            );
+            dto.UserProgress = (int)
+                Math.Ceiling((float)completedChapters * 100 / course.Chapters.Count);
+        }
     }
 }
