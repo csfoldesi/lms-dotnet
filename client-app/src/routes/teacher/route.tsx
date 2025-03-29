@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
+import { UserButton } from "@/features/auth/_components/user-button";
 import { Sidebar } from "@/features/dashboard/sidebar/sidebar";
-import { useAuth, UserButton } from "@clerk/clerk-react";
+import { useAuth } from "@clerk/clerk-react";
 import { createFileRoute, Link, Navigate, Outlet } from "@tanstack/react-router";
 import { LogOut } from "lucide-react";
 
@@ -10,7 +11,7 @@ export const Route = createFileRoute("/teacher")({
 
 function RouteComponent() {
   const { isLoaded, isSignedIn } = useAuth();
-  if (isLoaded && !isSignedIn) return <Navigate to="/auth" />;
+  if (isLoaded && !isSignedIn) return <Navigate to="/" />;
 
   return (
     <div className="h-fll">

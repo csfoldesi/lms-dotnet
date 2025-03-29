@@ -1,12 +1,11 @@
 import { Button } from "@/components/ui/button";
+import { UserButton } from "@/features/auth/_components/user-button";
 import { CourseMobileSidebar } from "@/features/playback/_components/course-mobile-sidebar";
 import { CourseSidebar } from "@/features/playback/_components/course-sidebar";
 import { useGetCourse } from "@/features/playback/api/use-get-course";
 import { useCourseId } from "@/hooks/use-course-id";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
 import { LogOut } from "lucide-react";
-import { useEffect } from "react";
 
 export const Route = createFileRoute("/courses_")({
   component: RouteComponent,
@@ -34,12 +33,7 @@ function RouteComponent() {
               Exit course
             </Button>
           </Link>
-          <SignedOut>
-            <SignInButton />
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
+          <UserButton />
         </div>
       </div>
       <div className="hidden md:flex h-full w-56 flex-col fixed inset-y-0 z-50">

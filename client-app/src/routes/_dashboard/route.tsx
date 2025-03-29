@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
+import { UserButton } from "@/features/auth/_components/user-button";
 import { Sidebar } from "@/features/dashboard/sidebar/sidebar";
 import { SearchInput } from "@/features/search/_components/search-input";
-import { UserButton } from "@clerk/clerk-react";
+import { useAuth } from "@clerk/clerk-react";
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_dashboard")({
@@ -9,6 +10,8 @@ export const Route = createFileRoute("/_dashboard")({
 });
 
 function RouteComponent() {
+  const { isSignedIn } = useAuth();
+
   return (
     <div className="h-fll">
       <div className="h-[80px] md:pl-56 fixed inset-y-0 w-full z-50 flex justify-between items-center pr-4 bg-background">
@@ -17,11 +20,13 @@ function RouteComponent() {
         </div>
         <div className="flex-1"></div>
         <div className="flex items-center">
-          <Link to="/teacher/courses">
-            <Button size="sm" variant="ghost" className="cursor-pointer mr-2">
-              Enter teacher mode
-            </Button>
-          </Link>
+          {isSignedIn && (
+            <Link to="/teacher/courses">
+              <Button size="sm" variant="ghost" className="cursor-pointer mr-2">
+                Enter teacher mode
+              </Button>
+            </Link>
+          )}
           <UserButton />
         </div>
       </div>
