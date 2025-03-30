@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { createFileRoute, useLocation, useNavigate } from "@tanstack/react-router";
 import qs from "query-string";
@@ -42,15 +43,17 @@ export const CategoryItem = ({ label, icon: Icon, value }: CategoryItemProps) =>
   };
 
   return (
-    <button
+    <Button
+      variant={isSelected ? "default" : "ghost"}
+      size="sm"
       onClick={onClick}
-      type="button"
       className={cn(
-        "py-2 px-3 text-sm border border-slate-200 rounded-full flex items-center gap-x-1 hover:border-sky-700 transition",
-        isSelected && "border-sky-700 bg-sky-200/20 text-sky-800"
+        "rounded-full transition-colors cursor-pointer",
+        "h-9 w-9 p-0 sm:h-9 sm:w-auto sm:px-3",
+        isSelected && "bg-primary text-primary-foreground"
       )}>
-      {Icon && <Icon size={20} />}
-      <div className="truncate">{label}</div>
-    </button>
+      {Icon && <Icon className="h-4 w-4 sm:mr-0 flex-shrink-0" />}
+      <span className="hidden md:inline">{label}</span>
+    </Button>
   );
 };
