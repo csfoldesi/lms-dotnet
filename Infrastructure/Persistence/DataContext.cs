@@ -11,10 +11,10 @@ namespace Infrastructure.Persistence
         public DbSet<Category> Categories { get; set; }
         public DbSet<Chapter> Chapters { get; set; }
         public DbSet<Course> Courses { get; set; }
-        public DbSet<MuxData> MuxDatas { get; set; }
         public DbSet<Purchase> Purchases { get; set; }
         public DbSet<StripeCustomer> StripeCustomers { get; set; }
         public DbSet<UserProgress> UserProgresses { get; set; }
+        public DbSet<Video> Videos { get; set; }
 
         public DataContext(DbContextOptions options)
             : base(options) { }
@@ -87,9 +87,9 @@ namespace Infrastructure.Persistence
 
             builder
                 .Entity<Chapter>()
-                .HasOne(c => c.MuxData)
-                .WithOne(m => m.Chapter)
-                .HasForeignKey<MuxData>(m => m.ChapterId)
+                .HasOne(c => c.Video)
+                .WithOne(v => v.Chapter)
+                .HasForeignKey<Video>(v => v.ChapterId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder

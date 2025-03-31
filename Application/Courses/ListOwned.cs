@@ -34,8 +34,8 @@ public class ListOwned
         {
             var query = _dataContext
                 .Courses.Where(course => course.UserId == _user.Id)
-                .Include(course => course.Chapters.OrderBy(chapter => chapter.Position))
-                .Include(course => course.Attachments.OrderBy(a => a.Name))
+                //.Include(course => course.Chapters.OrderBy(chapter => chapter.Position))
+                //.Include(course => course.Attachments.OrderBy(a => a.Name))
                 .Include(course => course.Category)
                 .AsSingleQuery()
                 .OrderBy(course => course.Title);

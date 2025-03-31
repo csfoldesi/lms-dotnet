@@ -33,6 +33,10 @@ public class MappingProfiles : AutoMapper.Profile
 
         CreateMap<Chapter, ChapterDto>()
             .ForMember(
+                dest => dest.VideoUrl,
+                opt => opt.MapFrom(src => src.Video != null ? src.Video.Url : null)
+            )
+            .ForMember(
                 dest => dest.IsCompleted,
                 opt => opt.MapFrom(src => src.UserProgresses.Any(u => u.IsCompleted))
             );

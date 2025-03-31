@@ -32,17 +32,15 @@ public class Get
         )
         {
             var course = await _dataContext
-                .Courses.Include(course =>
-                    course.Chapters.Where(c => c.IsPublished).OrderBy(chapter => chapter.Position)
-                )
-                .ThenInclude(chapter => chapter.UserProgresses.Where(u => u.UserId == _user.Id))
-                .Include(course => course.Attachments.OrderBy(a => a.Name))
-                .Include(course => course.Purchases.Where(p => p.UserId == _user.Id))
-                .AsSingleQuery()
-                .SingleOrDefaultAsync(
-                    c => c.Id == request.Id && c.IsPublished,
-                    cancellationToken: cancellationToken
-                );
+                .Courses.Where(c => c.Id == request.Id && c.IsPublished)
+                .Include(c => c.Chapters.Where(ch => ch.IsPublished).OrderBy(ch => ch.Position))
+                .ThenInclude(ch => ch.Video)
+                .Include(c => c.Chapters.Where(ch => ch.IsPublished).OrderBy(ch => ch.Position))
+                .ThenInclude(ch => ch.UserProgresses.Where(up => up.UserId == _user.Id))
+                .Include(c => c.Attachments.OrderBy(a => a.Name))
+                .Include(c => c.Purchases.Where(p => p.UserId == _user.Id))
+                .AsSplitQuery()
+                .SingleOrDefaultAsync(cancellationToken: cancellationToken);
 
             Helper.AssertIsNotNull(course, "Course not found");
 

@@ -42,6 +42,7 @@ public class Delete
             var course = await _dataContext
                 .Courses.Include(course => course.Attachments)
                 .Include(course => course.Chapters)
+                .ThenInclude(chapter => chapter.Video)
                 .AsSingleQuery()
                 .SingleOrDefaultAsync(
                     course => course.Id == request.Id,
@@ -64,8 +65,8 @@ public class Delete
             );
             publicIdsToDelete.AddRange(
                 course
-                    .Chapters.Where(c => !string.IsNullOrEmpty(c.VideoPublicId))
-                    .Select(c => c.VideoPublicId!)
+                    .Chapters.Where(c => c.Video != null && !string.IsNullOrEmpty(c.Video.PublicId))
+                    .Select(c => c.Video!.PublicId!)
             );
             if (publicIdsToDelete.Count > 0)
             {

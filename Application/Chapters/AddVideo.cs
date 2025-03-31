@@ -1,6 +1,7 @@
 ﻿using Application.Common;
 using Application.Common.Interfaces;
 using AutoMapper;
+using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,6 +43,7 @@ public class AddVideo
         {
             var chapter = await _dataContext
                 .Chapters.Include(chapter => chapter.Course)
+                .Include(chapter => chapter.Video)
                 .SingleOrDefaultAsync(
                     chapter => chapter.Id == request.Id,
                     cancellationToken: cancellationToken
@@ -56,13 +58,23 @@ public class AddVideo
                 return Result<ChapterDto>.Failure("Error during uploading video");
             }
 
-            if (!string.IsNullOrEmpty(chapter!.VideoPublicId))
+            if (chapter.Video != null)
             {
-                await _storageService.DeleteAsync(chapter.VideoPublicId);
+                if (!string.IsNullOrEmpty(chapter.Video.PublicId))
+                {
+                    await _storageService.DeleteAsync(chapter.Video.PublicId);
+                }
+                _dataContext.Videos.Remove(chapter.Video);
             }
 
-            chapter.VideoUrl = uploadResult.URI;
-            chapter.VideoPublicId = uploadResult.PublicId;
+            var video = new Video
+            {
+                Id = Guid.NewGuid(),
+                Url = uploadResult.URI,
+                PublicId = uploadResult.PublicId,
+                Chapter = chapter,
+            };
+            _dataContext.Videos.Add(video);
 
             try
             {

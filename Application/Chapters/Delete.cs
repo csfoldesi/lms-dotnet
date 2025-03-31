@@ -1,7 +1,6 @@
 ﻿using Application.Common;
 using Application.Common.Interfaces;
 using AutoMapper;
-using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,6 +40,7 @@ public class Delete
         {
             var chapter = await _dataContext
                 .Chapters.Include(chapter => chapter.Course)
+                .Include(chapter => chapter.Video)
                 .SingleOrDefaultAsync(
                     chapter => chapter.Id == request.Id,
                     cancellationToken: cancellationToken
@@ -50,9 +50,9 @@ public class Delete
             Helper.AssertIsOwner(chapter!.Course, _user.Id!);
 
             // delete video from storage
-            if (!string.IsNullOrEmpty(chapter!.VideoPublicId))
+            if (chapter.Video != null && !string.IsNullOrEmpty(chapter.Video.PublicId))
             {
-                await _storageService.DeleteAsync(chapter.VideoPublicId);
+                await _storageService.DeleteAsync(chapter.Video.PublicId);
             }
 
             // if no more published chapter, the course should be unpublised

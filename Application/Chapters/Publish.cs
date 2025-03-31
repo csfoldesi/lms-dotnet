@@ -44,7 +44,7 @@ public class Publish
             if (
                 string.IsNullOrEmpty(chapter!.Title)
                 || string.IsNullOrEmpty(chapter.Description)
-                || string.IsNullOrEmpty(chapter.VideoUrl)
+                || string.IsNullOrEmpty(chapter.Video?.Url)
             )
             {
                 return Result<ChapterDto>.Failure("Missing required fields");

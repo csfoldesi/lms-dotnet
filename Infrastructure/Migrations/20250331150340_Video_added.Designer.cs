@@ -4,6 +4,7 @@ using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250331150340_Video_added")]
+    partial class Video_added
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,6 +104,12 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("VideoPublicId")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("VideoUrl")
+                        .HasColumnType("longtext");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
@@ -151,6 +160,36 @@ namespace Infrastructure.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Courses");
+                });
+
+            modelBuilder.Entity("Domain.MuxData", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("AssetId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("ChapterId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("PlaybackId")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChapterId")
+                        .IsUnique();
+
+                    b.ToTable("MuxDatas");
                 });
 
             modelBuilder.Entity("Domain.Purchase", b =>
@@ -495,6 +534,17 @@ namespace Infrastructure.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("Domain.MuxData", b =>
+                {
+                    b.HasOne("Domain.Chapter", "Chapter")
+                        .WithOne("MuxData")
+                        .HasForeignKey("Domain.MuxData", "ChapterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chapter");
+                });
+
             modelBuilder.Entity("Domain.Purchase", b =>
                 {
                     b.HasOne("Domain.Course", "Course")
@@ -581,6 +631,8 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Chapter", b =>
                 {
+                    b.Navigation("MuxData");
+
                     b.Navigation("UserProgresses");
 
                     b.Navigation("Video");

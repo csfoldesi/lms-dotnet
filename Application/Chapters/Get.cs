@@ -31,10 +31,12 @@ public class Get
             CancellationToken cancellationToken
         )
         {
-            var chapter = await _dataContext.Chapters.SingleOrDefaultAsync(
-                chapter => chapter.Id == request.Id,
-                cancellationToken: cancellationToken
-            );
+            var chapter = await _dataContext
+                .Chapters.Include(c => c.Video)
+                .SingleOrDefaultAsync(
+                    chapter => chapter.Id == request.Id,
+                    cancellationToken: cancellationToken
+                );
 
             Helper.AssertIsNotNull(chapter, "Chapter not found");
 
