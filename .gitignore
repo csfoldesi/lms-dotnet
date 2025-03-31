@@ -64,3 +64,5 @@ bld/
 [Ll]ogs/
 /API/appsettings.Development.json
 /Notes.txt
+/API/wwwroot
+/.env

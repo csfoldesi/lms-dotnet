@@ -33,6 +33,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.UseHttpsRedirection();
 app.UseCors("CorsPolicy");
 
@@ -40,5 +43,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+//app.MapFallbackToController("Index", "Fallback");
+app.MapFallbackToFile("index.html");
 
 await app.RunAsync();
