@@ -51,6 +51,7 @@ public class UploadController : BaseApiController
             {
                 Id = Id,
                 FileName = file.FileName,
+                ContentType = file.ContentType,
                 Content = memoryStream.ToArray(),
             }
         );

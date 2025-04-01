@@ -13,6 +13,7 @@ public class AddVideo
     {
         public required Guid Id { get; set; }
         public required string FileName { get; set; }
+        public required string ContentType { get; set; }
         public required byte[] Content { get; set; }
     }
 
@@ -72,6 +73,7 @@ public class AddVideo
                 Id = Guid.NewGuid(),
                 Url = uploadResult.URI,
                 PublicId = uploadResult.PublicId,
+                ContentType = request.ContentType,
                 Chapter = chapter,
             };
             _dataContext.Videos.Add(video);

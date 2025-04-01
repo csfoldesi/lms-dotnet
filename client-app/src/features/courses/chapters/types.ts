@@ -4,6 +4,7 @@ export type Chapter = {
   position: number;
   description?: string;
   videoUrl?: string;
+  videoContentType?: string;
   isPublished: boolean;
   isFree: boolean;
   muxData?: MuxData;

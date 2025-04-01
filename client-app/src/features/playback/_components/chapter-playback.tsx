@@ -14,13 +14,12 @@ export const ChapterPlayback = () => {
   const courseId = useCourseId();
   const chapterId = useChapterId();
   const { data: course } = useGetCourse(courseId);
-  const { data: chapter} = useGetChapter(chapterId);
+  const { data: chapter } = useGetChapter(chapterId);
 
   const isLocked = !chapter?.isFree && !course?.isPurchased;
   const completeOnEnd = !!(course?.isPurchased && !chapter?.isCompleted);
 
   if (!course || !chapter) return null;
-
   return (
     <div>
       {isLocked && <Banner label="You need to purchase this chapter to continue" variant="warning" />}
@@ -32,6 +31,7 @@ export const ChapterPlayback = () => {
             courseId={courseId}
             nextChapterId={chapter.nextChapterId}
             url={chapter.videoUrl}
+            contentType={chapter.videoContentType}
             isLocked={isLocked}
             completeOnEnd={completeOnEnd}
           />

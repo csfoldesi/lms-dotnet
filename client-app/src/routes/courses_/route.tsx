@@ -4,7 +4,7 @@ import { CourseMobileSidebar } from "@/features/playback/_components/course-mobi
 import { CourseSidebar } from "@/features/playback/_components/course-sidebar";
 import { useGetCourse } from "@/features/playback/api/use-get-course";
 import { useCourseId } from "@/hooks/use-course-id";
-import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { LogOut } from "lucide-react";
 
 export const Route = createFileRoute("/courses_")({
@@ -13,13 +13,7 @@ export const Route = createFileRoute("/courses_")({
 
 function RouteComponent() {
   const courseId = useCourseId();
-  const { data: course, isLoading } = useGetCourse(courseId);
-  const navigate = useNavigate();
-
-  /*useEffect(() => {
-    if (isLoading || !course || course.chapters.length === 0) return;
-    navigate({ to: "/courses/$courseId/chapters/$chapterId", params: { courseId, chapterId: course.chapters[0].id } });
-  }, [isLoading, course, navigate, courseId]);*/
+  const { data: course } = useGetCourse(courseId);
 
   return (
     <div className="h-fll">

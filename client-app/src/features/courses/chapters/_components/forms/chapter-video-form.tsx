@@ -71,7 +71,7 @@ export const ChapterVideoForm = ({ initialData, chapterid }: ChapterVideoFormPro
         ) : (
           <div className="relative aspect-video mt-2">
             <video controls key={initialData.videoUrl} className="w-full">
-              <source src={initialData.videoUrl} type="video/mp4" />
+              <source src={initialData.videoUrl} type={initialData.videoContentType} />
               <p>
                 Your browser doesn't support HTML video. Here is a <a href={initialData.videoUrl}>link to the video</a>{" "}
                 instead.

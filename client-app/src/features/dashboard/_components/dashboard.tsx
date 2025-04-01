@@ -4,7 +4,7 @@ import { CheckCircle, Clock } from "lucide-react";
 import { useGetPurchasedCourseList } from "../api/use-get-purchased-course-list";
 
 export const Dashboard = () => {
-  const { data: courses, isLoading } = useGetPurchasedCourseList();
+  const { data: courses } = useGetPurchasedCourseList();
 
   const coursesInProgress = courses?.filter((course) => course.userProgress < 100);
   const completedCourses = courses?.filter((course) => course.userProgress === 100);
@@ -15,7 +15,7 @@ export const Dashboard = () => {
         <InfoCard icon={Clock} label="In Progress" numberOfItems={coursesInProgress?.length} />
         <InfoCard icon={CheckCircle} label="Completed" numberOfItems={completedCourses?.length} variant="success" />
       </div>
-      <CoursesList items={[...completedCourses ?? [], ...coursesInProgress ?? []]} />
+      <CoursesList items={[...(completedCourses ?? []), ...(coursesInProgress ?? [])]} />
     </div>
   );
 };

@@ -6,6 +6,7 @@ import { useUpdateProgress } from "../api/use-update-progress";
 
 interface VideoPlayerProps {
   url?: string | null | undefined;
+  contentType?: string;
   courseId: string;
   chapterId?: string;
   nextChapterId?: string;
@@ -14,12 +15,19 @@ interface VideoPlayerProps {
   completeOnEnd: boolean;
 }
 
-export const VideoPlayer = ({ chapterId, courseId, nextChapterId, url, isLocked, completeOnEnd }: VideoPlayerProps) => {
+export const VideoPlayer = ({
+  chapterId,
+  courseId,
+  nextChapterId,
+  url,
+  contentType = "",
+  isLocked,
+  completeOnEnd,
+}: VideoPlayerProps) => {
   //const [isReady, setIsReady] = useState(false);
   const confetti = useConfettiStore();
   const navigate = useNavigate();
   const { updateProgress } = useUpdateProgress();
-
   const onEnd = async () => {
     console.log("onEnd");
     if (completeOnEnd) {
@@ -51,7 +59,7 @@ export const VideoPlayer = ({ chapterId, courseId, nextChapterId, url, isLocked,
       )}
       {!isLocked && (
         <video controls key={url} className="w-full" onEnded={onEnd}>
-          <source src={url} type="video/mp4" />
+          <source src={url} type={contentType} />
           <p>
             Your browser doesn't support HTML video. Here is a <a href={url}>link to the video</a>
             instead.
