@@ -66,3 +66,6 @@ bld/
 /Notes.txt
 /API/wwwroot
 /.env
+/API/lms.db
+/API/lms.db-shm
+/API/lms.db-wal
