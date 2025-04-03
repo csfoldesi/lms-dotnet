@@ -15,18 +15,18 @@ public static class ServiceRegistration
     {
         services.AddSingleton(TimeProvider.System);
 
-        /*var connectionString = configuration.GetConnectionString("MysqlConnection")!;
+        var connectionString = configuration.GetConnectionString("MysqlConnection")!;
         var severVersion = ServerVersion.AutoDetect(connectionString);
         services.AddDbContext<DataContext>(
             (serviceProvider, options) => options.UseMySql(connectionString, severVersion)
         //.LogTo(Console.WriteLine, LogLevel.Information)
-        );*/
+        );
 
-        services.AddDbContext<DataContext>(
+        /*services.AddDbContext<DataContext>(
             (serviceProvider, options) =>
                 options.UseSqlite(configuration.GetConnectionString("SqliteConnection")!)
         //.LogTo(Console.WriteLine, LogLevel.Information)
-        );
+        );*/
 
         services.AddScoped<IDataContext>(provider => provider.GetRequiredService<DataContext>());
 
