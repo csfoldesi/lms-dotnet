@@ -4,5 +4,5 @@ namespace Domain;
 
 public class User : IdentityUser
 {
-    public required string Name { get; set; }
+    public string? Name { get; set; }
 }

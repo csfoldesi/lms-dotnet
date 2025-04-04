@@ -1,6 +1,9 @@
 ﻿using System.Security.Claims;
+using Domain;
 using Infrastructure.Identity.Settings;
+using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -15,6 +18,12 @@ public static class ServiceRegistration
     )
     {
         var config = configuration.GetSection(nameof(ClerkSettings)).Get<ClerkSettings>()!;
+
+        services
+            .AddIdentityCore<User>()
+            .AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<DataContext>()
+            .AddSignInManager<SignInManager<User>>();
 
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -42,7 +51,7 @@ public static class ServiceRegistration
                 // Map Clerk claims to ASP.NET Core claims
                 options.Events = new JwtBearerEvents
                 {
-                    OnTokenValidated = context =>
+                    OnTokenValidated = async context =>
                     {
                         var claimsIdentity = context.Principal?.Identity as ClaimsIdentity;
 
@@ -54,8 +63,14 @@ public static class ServiceRegistration
                                 new Claim(ClaimTypes.NameIdentifier, userIdClaim.Value)
                             );
                         }
-
-                        return Task.CompletedTask;
+                        var userId = claimsIdentity!.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                        var email = claimsIdentity!.FindFirst(ClaimTypes.Email)?.Value;
+                        var name = string.Format(
+                            "{0} {1}",
+                            claimsIdentity!.FindFirst(ClaimTypes.GivenName)?.Value,
+                            claimsIdentity!.FindFirst(ClaimTypes.Surname)?.Value
+                        );
+                        await CreateOauthUserAsync(context, userId, email, name);
                     },
                 };
             });
@@ -63,5 +78,33 @@ public static class ServiceRegistration
         services.AddAuthorization();
 
         return services;
+    }
+
+    private static async Task CreateOauthUserAsync(
+        TokenValidatedContext context,
+        string? userId,
+        string? email,
+        string? name
+    )
+    {
+        var userManager = context.HttpContext.RequestServices.GetRequiredService<
+            UserManager<User>
+        >();
+
+        if (userId != null)
+        {
+            var user = await userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                user = new User
+                {
+                    Id = userId,
+                    UserName = email ?? userId,
+                    Email = email,
+                    Name = name,
+                };
+                await userManager.CreateAsync(user);
+            }
+        }
     }
 }
