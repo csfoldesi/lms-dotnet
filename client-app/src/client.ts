@@ -10,7 +10,7 @@ export const useAuthClient = () => {
   const { getToken } = useAuth();
 
   async function setClientToken(client: AxiosInstance) {
-    const token = await getToken();
+    const token = await getToken({ template: "default" });
     if (token) {
       client.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     }
