@@ -2,11 +2,13 @@ using API.Extensions;
 using API.Middleware;
 using Application;
 using Infrastructure.Identity;
+using Infrastructure.Logging;
 using Infrastructure.Payment;
 using Infrastructure.Persistence;
 using Infrastructure.Seeds;
 using Infrastructure.Storage;
 using Microsoft.EntityFrameworkCore;
+using NLog.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,10 @@ builder.Services.AddApplicationServices();
 builder.Services.AddStorageServices(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddPaymentServices(builder.Configuration);
+builder.Services.AddLoggingServices();
+
+builder.Logging.ClearProviders();
+builder.Host.UseNLog();
 
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())

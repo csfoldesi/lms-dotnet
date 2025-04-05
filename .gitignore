@@ -69,3 +69,4 @@ bld/
 /API/lms.db
 /API/lms.db-shm
 /API/lms.db-wal
+/API/internal-nlog.txt
