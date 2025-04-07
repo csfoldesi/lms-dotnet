@@ -1,26 +1,16 @@
-# Learning Management System - .NET backend
+# Learning Management System for creating, organizing, and managing video courses - Frontend
 
-## Features
-- Authentication
-- Create courses and chapters, organized into different categories
-- Handle attachemnts
-- Embed videos in chapters
-- Offer free or paid chapters
-- Payment processing
-- Track and manage user progress
-
-## Technology
-
-### Frontend
 - React TypeScript
 - Tailwind CSS
 - Shadcn UI
 - Radix UI
 - Axios
 - Zod
-
-### Backend
+- tanstack/react-query
+- tanstack/react-router
+- tanstack/react-store
 
 ### Integrated 3th party services
 
-## Demo app
+- Clerk auth
+- Stripe for payment processing
