@@ -1,5 +1,5 @@
 import ReactQuill from "react-quill-new";
-import "react-quill-new/dist/quill.snow.css";
+//import "react-quill-new/dist/quill.snow.css";
 
 interface EditorProps {
   onChange: (value: string) => void;

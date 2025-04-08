@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { UserButton } from "@/features/auth/_components/user-button";
-import { Sidebar } from "@/features/dashboard/sidebar/sidebar";
+import { DashboarMobileSidebar } from "@/features/dashboard/sidebar/dashboar-mobile-sidebar";
+import { DashboardSidebar } from "@/features/dashboard/sidebar/dashboard-sidebar";
 import { SearchInput } from "@/features/search/_components/search-input";
 import { useAuth } from "@clerk/clerk-react";
 import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
@@ -18,6 +19,7 @@ function RouteComponent() {
   return (
     <div className="h-fll">
       <div className="h-[80px] md:pl-56 fixed inset-y-0 w-full z-50 flex justify-between items-center pr-4 bg-background">
+        <DashboarMobileSidebar />
         {searchInputVisible && (
           <div className="items-center ml-5 hidden md:block">
             <SearchInput />
@@ -36,7 +38,7 @@ function RouteComponent() {
         </div>
       </div>
       <div className="hidden md:flex h-full w-56 flex-col fixed inset-y-0 z-50">
-        <Sidebar type="default" />
+        <DashboardSidebar type="default" />
       </div>
       <main className="md:pl-56 pt-[80px] h-full">
         <Outlet />

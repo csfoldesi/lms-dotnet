@@ -11,7 +11,7 @@ interface CourseMobileSidebarProps {
 export const CourseMobileSidebar = ({ course, progressCount }: CourseMobileSidebarProps) => {
   return (
     <Sheet>
-      <SheetTrigger className="md:hidden pr-4 hover:opacity-75 transition ml-2">
+      <SheetTrigger className="md:hidden pr-4 hover:opacity-75 transition ml-2 cursor-pointer">
         <Menu />
       </SheetTrigger>
       <SheetContent side="left" className="bg-white p-0 w-72">

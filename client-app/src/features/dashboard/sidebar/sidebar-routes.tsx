@@ -1,5 +1,5 @@
 import { BarChart, Compass, Layout, List } from "lucide-react";
-import { SidebarType } from "./sidebar";
+import { SidebarType } from "./dashboard-sidebar";
 import { SidebarItem } from "./sidebar-item";
 
 const defaultRoutes = [
