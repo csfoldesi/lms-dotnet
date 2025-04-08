@@ -11,8 +11,9 @@ public class CloudinaryServices : IStorageService
 {
     private readonly Cloudinary _cloudinary;
     private readonly string _assetFolder;
+    private readonly ILoggerService _loggerService;
 
-    public CloudinaryServices(IOptions<CloudinarySettings> config)
+    public CloudinaryServices(IOptions<CloudinarySettings> config, ILoggerService loggerService)
     {
         var account = new Account(
             config.Value.CloudName,
@@ -21,6 +22,7 @@ public class CloudinaryServices : IStorageService
         );
         _cloudinary = new Cloudinary(account);
         _assetFolder = config.Value.AssetFolder;
+        _loggerService = loggerService;
     }
 
     public async Task<StorageItemDto?> AddAsync(string fileName, byte[] content)
@@ -34,7 +36,7 @@ public class CloudinaryServices : IStorageService
         var uploaResult = await _cloudinary.UploadAsync(uploadParams);
         if (uploaResult.Error != null)
         {
-            //throw new Exception(uploaResult.Error.Message);
+            _loggerService.LogError(uploaResult.Error.Message);
             return null;
         }
         return new StorageItemDto

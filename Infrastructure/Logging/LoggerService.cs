@@ -17,6 +17,11 @@ public class LoggerService : ILoggerService
         _logger.Error(exception, message, args);
     }
 
+    public void LogError(string message, params object[] args)
+    {
+        _logger.Error(message, args);
+    }
+
     public void LogInfo(string message, params object[] args)
     {
         _logger.Info(message, args);
