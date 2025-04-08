@@ -32,7 +32,8 @@ public class Publish
         )
         {
             var chapter = await _dataContext
-                .Chapters.Include(chapter => chapter.Course)
+                .Chapters.Include(chapter => chapter.Video)
+                .Include(chapter => chapter.Course)
                 .SingleOrDefaultAsync(
                     chapter => chapter.Id == request.Id,
                     cancellationToken: cancellationToken
