@@ -39,3 +39,12 @@
 - Clerk auth
 - Cloudinary as storage storage
 - Stripe for payment processing
+
+### Notes
+$env:JWT_KEY='key'
+
+dotnet ef migrations add "Init" -p Infrastructure -s API --verbose
+dotnet ef migrations remove -p Infrastructure -s API --verbose
+
+docker build -t lms:x64 .
+docker run -it --rm --env-file .env -p 5294:8080 --add-host=host.docker.internal:host-gateway lms:x64
