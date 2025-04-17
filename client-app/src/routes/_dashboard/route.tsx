@@ -3,7 +3,7 @@ import { UserButton } from "@/features/auth/_components/user-button";
 import { DashboarMobileSidebar } from "@/features/dashboard/sidebar/dashboar-mobile-sidebar";
 import { DashboardSidebar } from "@/features/dashboard/sidebar/dashboard-sidebar";
 import { SearchInput } from "@/features/search/_components/search-input";
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth, useUser } from "@clerk/clerk-react";
 import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_dashboard")({
@@ -12,6 +12,7 @@ export const Route = createFileRoute("/_dashboard")({
 
 function RouteComponent() {
   const { isSignedIn } = useAuth();
+  const { user } = useUser();
   const location = useLocation();
 
   const searchInputVisible = location.pathname.includes("/search");
@@ -27,7 +28,7 @@ function RouteComponent() {
         )}
         <div className="flex-1"></div>
         <div className="flex items-center">
-          {isSignedIn && (
+          {isSignedIn && user?.publicMetadata?.role === "Teacher" && (
             <Link to="/teacher/courses">
               <Button size="sm" variant="ghost" className="cursor-pointer mr-2">
                 Enter teacher mode

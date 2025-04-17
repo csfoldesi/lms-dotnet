@@ -1,7 +1,7 @@
 import { Logo } from "./logo";
 import { SidebarRoutes } from "./sidebar-routes";
 
-type SidebarType = "default" | "teacher";
+export type SidebarType = "default" | "teacher";
 
 type SidebarProps = {
   type?: SidebarType;

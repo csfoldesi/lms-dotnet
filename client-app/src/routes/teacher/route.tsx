@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { UserButton } from "@/features/auth/_components/user-button";
 import { DashboarMobileSidebar } from "@/features/dashboard/sidebar/dashboar-mobile-sidebar";
 import { DashboardSidebar } from "@/features/dashboard/sidebar/dashboard-sidebar";
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth, useUser } from "@clerk/clerk-react";
 import { createFileRoute, Link, Navigate, Outlet } from "@tanstack/react-router";
 import { LogOut } from "lucide-react";
 
@@ -12,7 +12,9 @@ export const Route = createFileRoute("/teacher")({
 
 function RouteComponent() {
   const { isLoaded, isSignedIn } = useAuth();
+  const { user, isLoaded: userIsLoaded } = useUser();
   if (isLoaded && !isSignedIn) return <Navigate to="/" />;
+  if (userIsLoaded && user?.publicMetadata?.role !== "Teacher") return <Navigate to="/" />;
 
   return (
     <div className="h-fll">
