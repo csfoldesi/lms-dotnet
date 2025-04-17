@@ -70,7 +70,8 @@ public static class ServiceRegistration
                             claimsIdentity!.FindFirst(ClaimTypes.GivenName)?.Value,
                             claimsIdentity!.FindFirst(ClaimTypes.Surname)?.Value
                         );
-                        await CreateOauthUserAsync(context, userId, email, name);
+                        var role = claimsIdentity!.FindFirst(ClaimTypes.Role)?.Value;
+                        await CreateOauthUserAsync(context, userId, email, name, role);
                     },
                 };
             });
@@ -84,7 +85,8 @@ public static class ServiceRegistration
         TokenValidatedContext context,
         string? userId,
         string? email,
-        string? name
+        string? name,
+        string? role
     )
     {
         var userManager = context.HttpContext.RequestServices.GetRequiredService<
@@ -103,7 +105,24 @@ public static class ServiceRegistration
                     Email = email,
                     Name = name,
                 };
-                await userManager.CreateAsync(user);
+                var createUserResult = await userManager.CreateAsync(user);
+                if (!createUserResult.Succeeded)
+                {
+                    user = null;
+                }
+            }
+            if (user != null)
+            {
+                var roles = await userManager.GetRolesAsync(user);
+                if (roles.Count > 1)
+                {
+                    await userManager.RemoveFromRolesAsync(user, roles);
+                }
+                if (string.IsNullOrEmpty(role))
+                {
+                    role = "Teacher";
+                }
+                await userManager.AddToRoleAsync(user, role!);
             }
         }
     }

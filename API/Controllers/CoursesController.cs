@@ -17,6 +17,7 @@ public class CoursesController : BaseApiController
         return HandleResult(result);
     }
 
+    [Authorize(Roles = "Teacher")]
     [HttpGet("teacher")]
     public async Task<IActionResult> ListOwned([FromQuery] CourseSearchRequest request)
     {
@@ -40,6 +41,7 @@ public class CoursesController : BaseApiController
         return HandleResult(result);
     }
 
+    [Authorize(Roles = "Teacher")]
     [HttpGet("{Id:guid}/teacher")]
     public async Task<IActionResult> GetOwned(Guid Id)
     {
@@ -47,6 +49,7 @@ public class CoursesController : BaseApiController
         return HandleResult(result);
     }
 
+    [Authorize(Roles = "Teacher")]
     [HttpPost]
     public async Task<IActionResult> Create(CourseCreateRequest request)
     {
@@ -56,6 +59,7 @@ public class CoursesController : BaseApiController
         return HandleResult(result);
     }
 
+    [Authorize(Roles = "Teacher")]
     [HttpPost("{Id}/chapters/")]
     public async Task<IActionResult> CreateChapter(Guid Id, [FromBody] ChapterCreateRequest request)
     {
@@ -65,6 +69,7 @@ public class CoursesController : BaseApiController
         return HandleResult(result);
     }
 
+    [Authorize(Roles = "Teacher")]
     [HttpPut("{Id}/chapters/")]
     public async Task<IActionResult> ReorderChapters(
         Guid Id,
@@ -81,6 +86,7 @@ public class CoursesController : BaseApiController
         return HandleResult(result);
     }
 
+    [Authorize(Roles = "Teacher")]
     [HttpDelete("{Id}")]
     public async Task<IActionResult> Delete(Guid Id)
     {
@@ -88,6 +94,7 @@ public class CoursesController : BaseApiController
         return HandleResult(result);
     }
 
+    [Authorize(Roles = "Teacher")]
     [HttpPatch("{Id}")]
     public async Task<IActionResult> Modify(Guid Id, [FromBody] CourseModifyRequest request)
     {
@@ -105,6 +112,7 @@ public class CoursesController : BaseApiController
         return HandleResult(result);
     }
 
+    [Authorize(Roles = "Teacher")]
     [HttpPatch("{Id}/publish")]
     public async Task<IActionResult> Publish(Guid Id)
     {
@@ -112,6 +120,7 @@ public class CoursesController : BaseApiController
         return HandleResult(result);
     }
 
+    [Authorize(Roles = "Teacher")]
     [HttpPatch("{Id}/unpublish")]
     public async Task<IActionResult> Unpublish(Guid Id)
     {

@@ -6,6 +6,7 @@ namespace API.Controllers;
 [Authorize]
 public class UploadController : BaseApiController
 {
+    [Authorize(Roles = "Teacher")]
     [HttpPost("courses/{Id}")]
     public async Task<IActionResult> AddCourseImage(Guid Id, [FromForm] IFormFile file)
     {
@@ -23,6 +24,7 @@ public class UploadController : BaseApiController
         return HandleResult(result);
     }
 
+    [Authorize(Roles = "Teacher")]
     [HttpPost("courses/{Id}/attachments")]
     public async Task<IActionResult> AddCourseAttachment(Guid Id, [FromForm] IFormFile file)
     {
@@ -40,6 +42,7 @@ public class UploadController : BaseApiController
         return HandleResult(result);
     }
 
+    [Authorize(Roles = "Teacher")]
     [HttpPost("chapters/{Id}")]
     public async Task<IActionResult> AddChapterVideo(Guid Id, [FromForm] IFormFile file)
     {

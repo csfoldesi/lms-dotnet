@@ -15,6 +15,7 @@ public class ChaptersController : BaseApiController
         return HandleResult(result);
     }
 
+    [Authorize(Roles = "Teacher")]
     [HttpPatch("{Id}")]
     public async Task<IActionResult> Modify(Guid Id, [FromBody] ChapterModifyRequest request)
     {
@@ -31,6 +32,7 @@ public class ChaptersController : BaseApiController
         return HandleResult(result);
     }
 
+    [Authorize(Roles = "Teacher")]
     [HttpDelete("{Id}")]
     public async Task<IActionResult> Delete(Guid Id)
     {
@@ -38,6 +40,7 @@ public class ChaptersController : BaseApiController
         return HandleResult(result);
     }
 
+    [Authorize(Roles = "Teacher")]
     [HttpPatch("{Id}/publish")]
     public async Task<IActionResult> Publish(Guid Id)
     {
@@ -45,6 +48,7 @@ public class ChaptersController : BaseApiController
         return HandleResult(result);
     }
 
+    [Authorize(Roles = "Teacher")]
     [HttpPatch("{Id}/unpublish")]
     public async Task<IActionResult> Unpublish(Guid Id)
     {
@@ -52,6 +56,7 @@ public class ChaptersController : BaseApiController
         return HandleResult(result);
     }
 
+    [Authorize(Roles = "Teacher")]
     [HttpPut("{Id}/progress")]
     public async Task<IActionResult> ToggleProgress(
         Guid Id,

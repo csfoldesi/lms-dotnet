@@ -10,10 +10,12 @@ namespace Infrastructure.Identity;
 public class IdentityService : IIdentityService
 {
     private readonly UserManager<User> _userManager;
+    private readonly ILoggerService _loggerService;
 
-    public IdentityService(UserManager<User> userManager)
+    public IdentityService(UserManager<User> userManager, ILoggerService loggerService)
     {
         _userManager = userManager;
+        _loggerService = loggerService;
     }
 
     public async Task<User> CreateOauthUserAsync(ClaimsPrincipal claimsPrincipal)
@@ -25,7 +27,12 @@ public class IdentityService : IIdentityService
             if (user == null)
             {
                 user = new User { Id = userId };
-                await _userManager.CreateAsync(user);
+                var createUserResult = await _userManager.CreateAsync(user);
+                if (createUserResult.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(user, Roles.User.ToString());
+                }
+                _loggerService.LogInfo($"User created. ID: {user.Id}, Email: {user.Email}");
             }
             return user;
         }

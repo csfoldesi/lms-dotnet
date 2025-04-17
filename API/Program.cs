@@ -7,6 +7,7 @@ using Infrastructure.Payment;
 using Infrastructure.Persistence;
 using Infrastructure.Seeds;
 using Infrastructure.Storage;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NLog.Web;
 
@@ -29,6 +30,7 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     await services.GetRequiredService<DataContext>().Database.MigrateAsync();
     await Categories.SeedAsync(services.GetRequiredService<DataContext>());
+    await Roles.SeedAsync(services.GetRequiredService<RoleManager<IdentityRole>>());
 }
 
 // Configure the HTTP request pipeline.
