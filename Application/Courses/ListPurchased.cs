@@ -29,16 +29,11 @@ public class ListPurchased
         )
         {
             var courses = await _dataContext
-                .Courses.Where(course => course.IsPublished)
-                .Include(course =>
-                    course.Chapters.Where(c => c.IsPublished).OrderBy(c => c.Position)
-                )
-                .ThenInclude(chapter => chapter.UserProgresses.Where(u => u.UserId == _user.Id))
-                .Include(course => course.Attachments.OrderBy(a => a.Name))
-                .Include(course => course.Category)
-                .Include(course => course.Purchases.Where(p => p.UserId == _user.Id))
-                .Where(c => c.Purchases.Any())
-                .AsSingleQuery()
+                .Purchases.Where(p => p.UserId == _user.Id)
+                .Include(p => p.Course)
+                .ThenInclude(c => c.Chapters.Where(ch => ch.IsPublished))
+                .ThenInclude(ch => ch.UserProgresses.Where(p => p.UserId == _user.Id))
+                .Select(x => x.Course)
                 .OrderBy(course => course.Title)
                 .ToListAsync(cancellationToken: cancellationToken);
 
