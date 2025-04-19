@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'lms-dashboard-sidebar',
+  selector: 'lms-sidebar',
   imports: [MatListModule, MatIconModule, RouterModule],
   template: `
     <mat-list role="list">
@@ -28,4 +28,4 @@ import { RouterModule } from '@angular/router';
   `,
   styles: ``,
 })
-export class DashboardSidebarComponent {}
+export class SidebarComponent {}

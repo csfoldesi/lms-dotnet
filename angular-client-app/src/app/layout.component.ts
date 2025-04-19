@@ -1,15 +1,22 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import { SidebarComponent } from './shared/sidebar.component';
 
 @Component({
   selector: 'lms-layout',
-  imports: [RouterModule],
+  imports: [RouterModule, SidebarComponent],
   template: `
     <div class="flex flex-1 min-h-screen min-w-screen">
       <aside class="w-64">
         <div className="p-6">
           <img alt="logo" src="images/logo.png" class="w-auto" />
-          sidebar
+          @if(this.router.url === '/') {
+          <lms-sidebar />
+          } @else if(this.router.url === '/search') {
+          <lms-sidebar />
+          } @else if(this.router.url === '/teacher') {
+          <p>teached sidebar</p>
+          }
         </div>
       </aside>
       <div class="flex flex-col w-full">
@@ -20,4 +27,6 @@ import { RouterModule } from '@angular/router';
   `,
   styles: ``,
 })
-export default class LayoutComponent {}
+export default class LayoutComponent {
+  router = inject(Router);
+}
