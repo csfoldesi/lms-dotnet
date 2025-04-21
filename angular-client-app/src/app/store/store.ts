@@ -21,7 +21,7 @@ interface State<T> {
 export abstract class Store<T> {
   http = inject(HttpClient);
 
-  private state = signal<State<T>>({
+  public state = signal<State<T>>({
     data: null,
     loading: false,
     error: null,
