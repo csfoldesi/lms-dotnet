@@ -1,9 +1,10 @@
-import { effect, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { CategoryStore } from './category-store';
+import { Subject } from 'rxjs';
 
 type SearchData = {
-  search: string;
-  selectedCategoryIds: string[] | undefined;
+  searchText: string;
+  selectedCategoryIds: string[];
 };
 
 @Injectable({
@@ -13,21 +14,26 @@ export class SearchStore {
   categoryStore = inject(CategoryStore);
 
   public state = signal<SearchData>({
-    search: '',
+    searchText: '',
     selectedCategoryIds: [],
   });
 
-  categories = this.categoryStore.data;
+  categories = computed(() =>
+    this.categoryStore.data()?.map((category) => ({
+      ...category,
+      isSelected: this.state().selectedCategoryIds.includes(category.id),
+    }))
+  );
 
   loadCategories$ = this.categoryStore.load$;
+  searchTextChaged$ = new Subject<string | null>();
 
   selectCategory(id: string) {
-    this.categoryStore.selectCategory(id);
     this.state.update((prevState) => ({
       ...prevState,
-      selectedCategoryIds: this.categories()
-        ?.filter((category) => category.isSelected)
-        .map((category) => category.id),
+      selectedCategoryIds: prevState.selectedCategoryIds?.includes(id)
+        ? prevState.selectedCategoryIds.filter((c) => c !== id)
+        : [...prevState.selectedCategoryIds, id],
     }));
   }
 

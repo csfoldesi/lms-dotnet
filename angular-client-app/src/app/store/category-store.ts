@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class CategoryStore extends Store<Category[]> {
-  selectCategory(id: string): void {
+  /*selectCategory(id: string): void {
     this.state.update((prevState) => ({
       ...prevState,
       data: prevState.data!.map((category) => ({
@@ -16,7 +16,7 @@ export class CategoryStore extends Store<Category[]> {
           category.id === id ? !category.isSelected : category.isSelected,
       })),
     }));
-  }
+  }*/
 
   override fetchData(): Observable<ApiResponse<Category[]>> {
     const url = import.meta.env.NG_APP_API_URL + '/categories';
