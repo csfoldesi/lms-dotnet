@@ -12,7 +12,7 @@ public class CoursesController : BaseApiController
     public async Task<IActionResult> ListPublished([FromQuery] CourseSearchRequest request)
     {
         var result = await Mediator.Send(
-            new ListPublished.Query { CategoryId = request.CategoryId, Title = request.Title }
+            new ListPublished.Query { Categories = request.Categories, Title = request.Title }
         );
         return HandleResult(result);
     }
@@ -22,7 +22,7 @@ public class CoursesController : BaseApiController
     public async Task<IActionResult> ListOwned([FromQuery] CourseSearchRequest request)
     {
         var result = await Mediator.Send(
-            new ListOwned.Query { CategoryId = request.CategoryId, Title = request.Title }
+            new ListOwned.Query { Categories = request.Categories, Title = request.Title }
         );
         return HandleResult(result);
     }

@@ -10,7 +10,7 @@ public class ListOwned
 {
     public class Query : IRequest<Result<List<CourseDto>>>
     {
-        public Guid? CategoryId { get; set; }
+        public Guid[]? Categories { get; set; }
         public string? Title { get; set; }
     }
 
@@ -39,11 +39,11 @@ public class ListOwned
                 .Include(course => course.Category)
                 .AsSingleQuery()
                 .OrderBy(course => course.Title);
-            if (request.CategoryId != null)
+            if (request.Categories != null)
             {
                 query =
                     (IOrderedQueryable<Domain.Course>)
-                        query.Where(c => c.CategoryId == request.CategoryId);
+                        query.Where(c => request.Categories.Any(x => x == c.CategoryId));
             }
             if (request.Title != null)
             {

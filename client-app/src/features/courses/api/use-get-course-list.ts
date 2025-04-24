@@ -16,8 +16,12 @@ export const useGetCourseList = ({ title = "", categoryId = "" }: Request) => {
     retry: false,
     queryFn: async () => {
       await setClientToken(client);
+      let url = `/courses?title=${title}`;
+      if (categoryId) {
+        url += `&categories=${categoryId}`;
+      }
       return client
-        .get(`/courses?title=${title}&categoryId=${categoryId}`)
+        .get(url)
         .then((res) => {
           return res.data.data;
         })

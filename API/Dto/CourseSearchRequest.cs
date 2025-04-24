@@ -2,6 +2,6 @@
 
 public class CourseSearchRequest
 {
-    public Guid? CategoryId { get; set; }
+    public Guid[]? Categories { get; set; }
     public string? Title { get; set; }
 }
