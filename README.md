@@ -15,7 +15,7 @@
 
 - .NET Core RESTful API
 - Clean Architecture
-- Entity Framework
+- Fluent NHibernate
 - Identity
 - MediatR
 - AutoMapper
