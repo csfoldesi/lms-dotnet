@@ -1,6 +1,10 @@
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { CategoryStore } from './category-store';
-import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, startWith } from 'rxjs';
+import { FormControl } from '@angular/forms';
+import { connect } from 'ngxtension/connect';
+import { HttpClient } from '@angular/common/http';
+import { CourseListStore } from './course-list.store';
 
 type SearchData = {
   searchText: string;
@@ -11,12 +15,19 @@ type SearchData = {
   providedIn: 'root',
 })
 export class SearchStore {
+  http = inject(HttpClient);
+
   categoryStore = inject(CategoryStore);
+  courseListStore = inject(CourseListStore);
 
   public state = signal<SearchData>({
     searchText: '',
     selectedCategoryIds: [],
   });
+
+  searchFormControl = new FormControl('');
+
+  loadCategories$ = this.categoryStore.load$;
 
   categories = computed(() =>
     this.categoryStore.data()?.map((category) => ({
@@ -24,9 +35,7 @@ export class SearchStore {
       isSelected: this.state().selectedCategoryIds.includes(category.id),
     }))
   );
-
-  loadCategories$ = this.categoryStore.load$;
-  searchTextChaged$ = new Subject<string | null>();
+  courses = computed(() => this.courseListStore.data());
 
   selectCategory(id: string) {
     this.state.update((prevState) => ({
@@ -37,7 +46,37 @@ export class SearchStore {
     }));
   }
 
+  private searchTextChaged$ = this.searchFormControl.valueChanges.pipe(
+    debounceTime(500),
+    distinctUntilChanged(),
+    startWith('')
+  );
+
   constructor() {
     effect(() => console.log('State:', this.state()));
+
+    connect(this.state).with(
+      this.searchTextChaged$,
+      (prevState, searchText) => ({
+        ...prevState,
+        searchText: searchText!,
+      })
+    );
+
+    effect(() => {
+      const params = this.urlParams();
+      this.courseListStore.load$.next(params);
+    });
   }
+
+  private urlParams = computed(() => {
+    const searchParams = new URLSearchParams();
+    if (this.state().searchText) {
+      searchParams.append('title', this.state().searchText);
+    }
+    this.state().selectedCategoryIds.forEach((categoryId) => {
+      searchParams.append('categories', categoryId);
+    });
+    return searchParams.toString();
+  });
 }

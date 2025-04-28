@@ -7,8 +7,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class CourseListStore extends Store<Course[]> {
-  override fetchData(): Observable<ApiResponse<Course[]>> {
-    const url = `${import.meta.env.NG_APP_API_URL}/courses`;
+  override fetchData(params = ''): Observable<ApiResponse<Course[]>> {
+    const url = `${import.meta.env.NG_APP_API_URL}/courses?${params}`;
     return this.http.get<ApiResponse<Course[]>>(url);
   }
 }
