@@ -1,3 +1,12 @@
 @import "tailwindcss";
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+@layer components {
+    .card {
+      background-color: var(--color-white);
+      border-radius: var(--rounded-lg);
+      padding: var(--spacing-6);
+      box-shadow: var(--shadow-xl);
+    }
+  }
