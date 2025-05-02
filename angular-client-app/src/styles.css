@@ -10,3 +10,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
       box-shadow: var(--shadow-xl);
     }
   }
+
+  .icon-white {
+    color: white;
+  }
+  
