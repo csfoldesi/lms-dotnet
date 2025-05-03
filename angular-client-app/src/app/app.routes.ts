@@ -18,4 +18,8 @@ export const routes: Routes = [
     path: 'courses/:courseId/chapters/:chapterId',
     loadComponent: () => import('./playback/chapter-playback.component'),
   },
+  {
+    path: 'profile',
+    loadComponent: () => import('./auth/ui/user-profile.component'),
+  },
 ];

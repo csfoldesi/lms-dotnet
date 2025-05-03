@@ -5,6 +5,8 @@ declare interface Env {
   // Example: NGX_VERSION: string;
   [key: string]: any;
   NG_APP_API_URL: string;
+  NG_APP_AUTH0_DOMAIN: string;
+  NG_APP_AUTH0_CLIENT_ID: string;
 }
 
 // Choose how to access the environment variables.
