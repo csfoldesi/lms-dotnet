@@ -15,3 +15,26 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     color: white;
   }
   
+  .rounded-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #1e293b;
+    color: white;
+    font-size: 18px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    outline: none;
+    margin: 5px;
+  }
+  .rounded-button:hover {
+    background-color: #334155;
+  }
+  .rounded-button:focus {
+    box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.5);
+  }

@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { VideoPlayerComponent } from './ui/video-player.component';
+import { UserButtonComponent } from '../auth/ui/user-button.component';
 
 @Component({
   selector: 'lms-chapter-playback',
@@ -13,6 +14,7 @@ import { VideoPlayerComponent } from './ui/video-player.component';
     MatButtonModule,
     RouterModule,
     VideoPlayerComponent,
+    UserButtonComponent,
   ],
   template: `
     <div class="flex flex-1 min-h-screen min-w-screen">
@@ -28,7 +30,7 @@ import { VideoPlayerComponent } from './ui/video-player.component';
       </aside>
       <div class="flex flex-col w-full">
         <header class="flex w-full h-[50px]">
-          <div class="flex-1"></div>
+          <div class="flex flex-1"></div>
           <div>
             <a routerLink="/search">
               <button mat-stroked-button class="m-1">
@@ -36,8 +38,9 @@ import { VideoPlayerComponent } from './ui/video-player.component';
               </button>
             </a>
           </div>
+          <lms-user-button />
         </header>
-        <main class="flex flex-1 w-full">
+        <main class="flex w-full">
           <div class="flex flex-col max-w-4xl mx-auto w-full pb-20">
             <div class="p-4">
               <lms-video-player

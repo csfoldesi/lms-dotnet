@@ -20,6 +20,6 @@ export const routes: Routes = [
   },
   {
     path: 'profile',
-    loadComponent: () => import('./auth/ui/user-profile.component'),
+    loadComponent: () => import('./auth/user-profile.component'),
   },
 ];
