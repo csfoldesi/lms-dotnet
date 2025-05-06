@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { Chapter } from '../../shared/types';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
@@ -21,7 +21,7 @@ import { NgClass } from '@angular/common';
         >
           <div class="cursor-pointer flex">
             <mat-icon matListItemIcon class="mr-2">
-              play_circle_outline
+              {{ icon(chapter) }}
             </mat-icon>
             {{ chapter.title }}
           </div>
@@ -33,7 +33,14 @@ import { NgClass } from '@angular/common';
   styles: ``,
 })
 export class PlaybackSidebarComponent {
-  chapters = input<Chapter[] | null>();
   courseId = input.required<string>();
+  chapters = input<Chapter[] | null>();
   selectedChapterId = input.required<string>();
+  isPurchased = input<boolean | undefined>(false);
+
+  icon(chapter: Chapter): string {
+    if (!this.isPurchased() && !chapter.isFree) return 'lock_outline';
+    else if (chapter.isCompleted) return 'check_circle_outline';
+    return 'play_circle_outline';
+  }
 }

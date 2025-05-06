@@ -25,6 +25,7 @@ import { UserButtonComponent } from '../auth/ui/user-button.component';
             [chapters]="course()?.chapters"
             [courseId]="courseId()!"
             [selectedChapterId]="chapterId()!"
+            [isPurchased]="course()?.isPurchased"
           ></lms-playback-sidebar>
         </div>
       </aside>
