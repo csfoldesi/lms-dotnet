@@ -20,6 +20,9 @@ import { RouterModule } from '@angular/router';
           [title]="course.title"
           [imageUrl]="course.imageUrl"
           [category]="course.category"
+          [chapters]="course.chapters.length"
+          [price]="course.price"
+          [progress]="course.userProgress"
         />
       </a>
       }
