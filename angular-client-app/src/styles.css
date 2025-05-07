@@ -38,3 +38,12 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   .rounded-button:focus {
     box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.5);
   }
+
+.mat-mdc-progress-bar {
+  --mdc-linear-progress-active-indicator-height: 8px;
+  --mdc-linear-progress-track-height: 8px;
+}
+
+.mat-mdc-progress-bar.completed {
+  --mdc-linear-progress-active-indicator-color: green;
+}

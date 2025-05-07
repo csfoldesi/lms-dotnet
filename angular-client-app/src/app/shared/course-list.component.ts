@@ -23,6 +23,7 @@ import { RouterModule } from '@angular/router';
           [chapters]="course.chapters.length"
           [price]="course.price"
           [progress]="course.userProgress"
+          [isPurchased]="course.isPurchased"
         />
       </a>
       }

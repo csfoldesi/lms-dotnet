@@ -1,4 +1,4 @@
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, NgClass } from '@angular/common';
 import { Component, input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -13,6 +13,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatIconModule,
     CurrencyPipe,
     MatProgressBarModule,
+    NgClass,
   ],
   template: `
     <div
@@ -34,13 +35,21 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
             <span> {{ chapters() }} chapters</span>
           </div>
         </div>
-        <p class="text-md md:text-sm font-medium text-slate-700">
-          {{ price() | currency : 'USD' : 'symbol' }}
-        </p>
+        @if(isPurchased()){
         <mat-progress-bar
           mode="determinate"
           [value]="progress()"
+          class="rounded-lg"
+          [ngClass]="{
+            completed: progress() === 100
+          }"
         ></mat-progress-bar>
+        <p class="text-xs m-2">{{ progress() }}% complete</p>
+        } @else {
+        <p class="text-md md:text-sm font-medium text-slate-700">
+          {{ price() | currency : 'USD' : 'symbol' }}
+        </p>
+        }
       </div>
     </div>
   `,
@@ -53,4 +62,5 @@ export class CourseCardComponent {
   chapters = input<number>();
   price = input<number>();
   progress = input<number>();
+  isPurchased = input<boolean>();
 }

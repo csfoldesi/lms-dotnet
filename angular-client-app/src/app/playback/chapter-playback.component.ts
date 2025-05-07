@@ -6,6 +6,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { VideoPlayerComponent } from './ui/video-player.component';
 import { UserButtonComponent } from '../auth/ui/user-button.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'lms-chapter-playback',
@@ -15,6 +16,7 @@ import { UserButtonComponent } from '../auth/ui/user-button.component';
     RouterModule,
     VideoPlayerComponent,
     UserButtonComponent,
+    MatIconModule,
   ],
   template: `
     <div class="flex flex-1 min-h-screen min-w-screen">
@@ -31,23 +33,40 @@ import { UserButtonComponent } from '../auth/ui/user-button.component';
       </aside>
       <div class="flex flex-col w-full">
         <header class="flex w-full h-[50px]">
-          <div class="flex flex-1"></div>
           <div>
             <a routerLink="/search">
-              <button mat-stroked-button class="m-1">
-                <span>Exit Course</span>
+              <button mat-button class="m-1">
+                <mat-icon>arrow_back</mat-icon>
+                Exit Course
               </button>
             </a>
           </div>
+          <div class="flex flex-1"></div>
           <lms-user-button />
         </header>
         <main class="flex w-full">
-          <div class="flex flex-col max-w-4xl mx-auto w-full pb-20">
+          <div class="flex flex-col max-w-4xl mx-auto w-full">
             <div class="p-4">
               <lms-video-player
                 [url]="chapter()?.videoUrl"
                 [contentType]="chapter()?.videoContentType"
+                [isLocked]="isLocked()"
               />
+              <div
+                class="flex flex-col md:flex-row items-center justify-between p-4"
+              >
+                <h2 class="text-2xl font-semibold mb-2">
+                  {{ chapter()?.title }}
+                </h2>
+                @if(course()?.isPurchased && chapter()?.isCompleted) {
+                <button mat-flat-button>Not Completed</button>
+                } @else if(course()?.isPurchased) {
+                <button mat-flat-button>Mark as completed</button>
+                } @else {
+                <button mat-flat-button>Purchase</button>
+                }
+              </div>
+              <div>{{ course()?.description }}</div>
             </div>
           </div>
         </main>
@@ -67,6 +86,9 @@ export default class ChapterPlaybackComponent implements OnInit {
   course = computed(() => this.courseStore.data());
   chapter = computed(() =>
     this.course()?.chapters.find((c) => c.id === this.chapterId())
+  );
+  isLocked = computed(
+    () => !this.chapter()?.isFree && !this.course()?.isPurchased
   );
 
   ngOnInit(): void {
