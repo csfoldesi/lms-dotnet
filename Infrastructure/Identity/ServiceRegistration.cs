@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Diagnostics;
+using System.Security.Claims;
 using Domain;
 using Infrastructure.Identity.Settings;
 using Infrastructure.Persistence;
@@ -77,7 +78,8 @@ public static class ServiceRegistration
                                 claimsIdentity!.FindFirst(ClaimTypes.Surname)?.Value
                             );
                             var role = claimsIdentity!.FindFirst(ClaimTypes.Role)?.Value;
-                            await CreateOauthUserAsync(context, userId, email, name, role);
+                            userId = await CreateOauthUserAsync(context, userId, email, name, role);
+                            claimsIdentity!.AddClaim(new Claim("global_id", userId));
                         },
                     };
                 }
@@ -96,6 +98,33 @@ public static class ServiceRegistration
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
                     };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnTokenValidated = async context =>
+                        {
+                            var claimsIdentity = context.Principal?.Identity as ClaimsIdentity;
+
+                            /*var userIdClaim = claimsIdentity?.FindFirst("sub");
+                            if (userIdClaim != null)
+                            {
+                                claimsIdentity!.AddClaim(
+                                    new Claim(ClaimTypes.NameIdentifier, userIdClaim.Value)
+                                );
+                            }*/
+                            var userId = claimsIdentity!
+                                .FindFirst(ClaimTypes.NameIdentifier)
+                                ?.Value;
+                            var email = claimsIdentity!.FindFirst(ClaimTypes.Email)?.Value;
+                            var name = string.Format(
+                                "{0} {1}",
+                                claimsIdentity!.FindFirst(ClaimTypes.GivenName)?.Value,
+                                claimsIdentity!.FindFirst(ClaimTypes.Surname)?.Value
+                            );
+                            var role = claimsIdentity!.FindFirst(ClaimTypes.Role)?.Value;
+                            userId = await CreateOauthUserAsync(context, userId, email, name, role);
+                            claimsIdentity!.AddClaim(new Claim("global_id", userId));
+                        },
+                    };
                 }
             );
 
@@ -110,7 +139,7 @@ public static class ServiceRegistration
         return services;
     }
 
-    private static async Task CreateOauthUserAsync(
+    private static async Task<string> CreateOauthUserAsync(
         TokenValidatedContext context,
         string? userId,
         string? email,
@@ -122,15 +151,15 @@ public static class ServiceRegistration
             UserManager<User>
         >();
 
-        if (userId != null)
+        if (email != null)
         {
-            var user = await userManager.FindByIdAsync(userId);
+            var user = await userManager.FindByEmailAsync(email);
             if (user == null)
             {
                 user = new User
                 {
-                    Id = userId,
-                    UserName = email ?? userId,
+                    Id = userId ?? Guid.NewGuid().ToString(),
+                    UserName = email!,
                     Email = email,
                     Name = name,
                 };
@@ -143,7 +172,7 @@ public static class ServiceRegistration
             if (user != null)
             {
                 var roles = await userManager.GetRolesAsync(user);
-                if (roles.Count > 1)
+                if (roles.Count > 0)
                 {
                     await userManager.RemoveFromRolesAsync(user, roles);
                 }
@@ -152,7 +181,9 @@ public static class ServiceRegistration
                     role = "Teacher";
                 }
                 await userManager.AddToRoleAsync(user, role!);
+                return user.Id;
             }
         }
+        return string.Empty;
     }
 }
